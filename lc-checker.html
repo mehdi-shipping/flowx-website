@@ -759,6 +759,63 @@
     font-style: italic;
   }
 
+  .confidence-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .confidence-badge.high {
+    background: rgba(22,163,74,0.1);
+    color: var(--green);
+  }
+
+  .confidence-badge.medium {
+    background: rgba(234,88,12,0.1);
+    color: var(--orange);
+  }
+
+  .confidence-badge.low {
+    background: rgba(220,38,38,0.1);
+    color: var(--red);
+  }
+
+  /* Verification summary */
+  .verify-summary {
+    background: rgba(13,148,136,0.06);
+    border: 1px solid rgba(13,148,136,0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 2rem;
+    font-size: 0.88rem;
+    color: var(--teal);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* OCR progress */
+  .ocr-progress {
+    background: rgba(180,83,9,0.06);
+    border: 1px solid rgba(180,83,9,0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: var(--gold);
+    font-weight: 500;
+    display: none;
+  }
+
+  .ocr-progress.show {
+    display: block;
+  }
+
   /* Recommended actions */
   .actions-list {
     display: flex;
@@ -1107,6 +1164,7 @@
     <button class="analyze-btn" id="analyzeBtn" disabled>Analyze Documents</button>
 
     <div class="error-message" id="errorMessage"></div>
+    <div class="ocr-progress" id="ocrProgress"></div>
   </div>
 </section>
 
@@ -1118,19 +1176,25 @@
       <div class="loading-step-icon">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
       </div>
-      Reading your documents...
+      Classifying documents...
     </div>
     <div class="loading-step" id="step2">
       <div class="loading-step-icon">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
       </div>
-      Analyzing against UCP 600 rules...
+      Parsing L/C requirements...
     </div>
     <div class="loading-step" id="step3">
       <div class="loading-step-icon">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
       </div>
-      Checking cross-document consistency...
+      Checking UCP 600 compliance...
+    </div>
+    <div class="loading-step" id="step4">
+      <div class="loading-step-icon">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      Verifying findings...
     </div>
   </div>
 </section>
@@ -1138,6 +1202,12 @@
 <!-- RESULTS SECTION -->
 <section class="results-section" id="resultsSection">
   <div class="results-wrapper">
+
+    <!-- Verification Summary -->
+    <div class="verify-summary" id="verifySummary" style="display:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span id="verifySummaryText"></span>
+    </div>
 
     <!-- Verdict Banner -->
     <div class="verdict-banner" id="verdictBanner">
@@ -1233,6 +1303,8 @@
 
 <!-- PDF.js from CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- Tesseract.js for OCR on scanned PDFs -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <script>
   // Set pdf.js worker
@@ -1330,6 +1402,9 @@
   }
 
   // ========== PDF TEXT EXTRACTION ==========
+  const OCR_MIN_TEXT_LENGTH = 100;
+  const OCR_MAX_PAGES = 3;
+
   async function extractTextFromPdf(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -1340,6 +1415,44 @@
       const content = await page.getTextContent();
       const pageText = content.items.map(item => item.str).join(' ');
       fullText += pageText + '\n';
+    }
+
+    const trimmed = fullText.trim();
+
+    // If very little text extracted, try OCR on scanned pages
+    if (trimmed.length < OCR_MIN_TEXT_LENGTH) {
+      const ocrText = await ocrFallback(pdf, file.name);
+      if (ocrText && ocrText.trim().length > 0) {
+        return '[OCR-extracted text — may contain recognition errors]\n' + ocrText.trim();
+      }
+    }
+
+    return trimmed;
+  }
+
+  async function ocrFallback(pdf, fileName) {
+    const ocrProgress = document.getElementById('ocrProgress');
+    ocrProgress.classList.add('show');
+    let fullText = '';
+    const pagesToOcr = Math.min(pdf.numPages, OCR_MAX_PAGES);
+
+    try {
+      for (let i = 1; i <= pagesToOcr; i++) {
+        ocrProgress.textContent = `Running OCR on scanned document: ${sanitize(fileName)}... page ${i}/${pagesToOcr} (this may take 30-60 seconds per page)`;
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        const { data: { text } } = await Tesseract.recognize(canvas, 'eng');
+        fullText += text + '\n';
+        canvas.remove();
+      }
+    } finally {
+      ocrProgress.classList.remove('show');
     }
 
     return fullText.trim();
@@ -1356,19 +1469,20 @@
   }
 
   // ========== LOADING PROGRESS ==========
+  const TOTAL_STEPS = 4;
+
   function showLoading() {
     document.getElementById('loadingSection').classList.add('active');
     document.querySelector('.upload-section').style.display = 'none';
-    // Reset steps
-    ['step1', 'step2', 'step3'].forEach(id => {
-      const el = document.getElementById(id);
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      const el = document.getElementById('step' + i);
       el.classList.remove('active', 'done');
-    });
+    }
     setLoadingStep(1);
   }
 
   function setLoadingStep(step) {
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
       const el = document.getElementById('step' + i);
       if (i < step) {
         el.classList.remove('active');
@@ -1395,7 +1509,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     try {
-      // Step 1: Extract text from PDFs
+      // Phase 1: Classify documents — extract text from PDFs
       setLoadingStep(1);
       const documents = [];
       for (const file of uploadedFiles) {
@@ -1420,11 +1534,11 @@
       if (!hasText) {
         hideLoading();
         document.querySelector('.upload-section').style.display = '';
-        showError('Could not extract text from the uploaded PDFs. They may be scanned images — this tool requires text-based (digital) PDFs, not scanned copies.');
+        showError('Could not extract text from the uploaded PDFs. The documents may be image-only scans that OCR could not read. Please try uploading text-based (digital) PDFs.');
         return;
       }
 
-      // Step 2: Send to API
+      // Phase 2: Parse L/C requirements
       setLoadingStep(2);
       const response = await fetch('/api/analyze', {
         method: 'POST',
@@ -1432,7 +1546,7 @@
         body: JSON.stringify({ documents })
       });
 
-      // Step 3: Processing
+      // Phase 3: Check UCP 600 compliance
       setLoadingStep(3);
 
       if (!response.ok) {
@@ -1440,13 +1554,39 @@
         throw new Error(err.error || 'Analysis failed. Please try again.');
       }
 
-      const result = await response.json();
+      const analysisResult = await response.json();
 
-      // Small delay for visual effect
-      await new Promise(r => setTimeout(r, 500));
+      // Phase 4: Verify findings
+      setLoadingStep(4);
+      let finalResult = analysisResult;
+      let removedCount = 0;
+
+      try {
+        const verifyResponse = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ analysis: analysisResult })
+        });
+
+        if (verifyResponse.ok) {
+          const verifiedResult = await verifyResponse.json();
+          const originalCount = (analysisResult.discrepancies || []).length;
+          const verifiedCount = (verifiedResult.discrepancies || []).length;
+          removedCount = originalCount - verifiedCount;
+          finalResult = verifiedResult;
+          finalResult._verified = true;
+          finalResult._confirmedCount = verifiedCount;
+          finalResult._removedCount = Math.max(0, removedCount);
+        }
+      } catch {
+        // Verification failed — use unverified results
+        console.warn('Verification phase failed, using unverified results');
+      }
+
+      await new Promise(r => setTimeout(r, 300));
 
       hideLoading();
-      renderResults(result);
+      renderResults(finalResult);
 
     } catch (err) {
       hideLoading();
@@ -1459,6 +1599,16 @@
   function renderResults(data) {
     const resultsSection = document.getElementById('resultsSection');
     const emailSection = document.getElementById('emailSection');
+
+    // Verification summary
+    const verifySummary = document.getElementById('verifySummary');
+    const verifySummaryText = document.getElementById('verifySummaryText');
+    if (data._verified) {
+      verifySummary.style.display = '';
+      verifySummaryText.textContent = `Verified: ${data._confirmedCount} finding${data._confirmedCount !== 1 ? 's' : ''} confirmed, ${data._removedCount} removed as false positive${data._removedCount !== 1 ? 's' : ''}`;
+    } else {
+      verifySummary.style.display = 'none';
+    }
 
     // Verdict
     const verdictBanner = document.getElementById('verdictBanner');
@@ -1527,11 +1677,22 @@
     const discrepancyList = document.getElementById('discrepancyList');
     if (discrepancies.length > 0) {
       document.getElementById('discrepancyBlock').style.display = '';
-      discrepancyList.innerHTML = discrepancies.map(d => `
+      discrepancyList.innerHTML = discrepancies.map(d => {
+        let confidenceHtml = '';
+        if (d.confidence_score != null) {
+          const score = Number(d.confidence_score);
+          let confClass = 'high';
+          let confLabel = 'HIGH';
+          if (score < 0.7) { confClass = 'low'; confLabel = 'LOW'; }
+          else if (score < 0.9) { confClass = 'medium'; confLabel = 'MEDIUM'; }
+          confidenceHtml = `<span class="confidence-badge ${confClass}">${confLabel} ${Math.round(score * 100)}%</span>`;
+        }
+        return `
         <div class="discrepancy-card ${sanitize(d.severity)}">
           <div class="discrepancy-header">
             <span class="severity-badge ${sanitize(d.severity)}">${sanitize(d.severity)}</span>
             <span class="discrepancy-title">${sanitize(d.title)}</span>
+            ${confidenceHtml}
             ${d.ucpArticle ? `<span class="ucp-ref">${sanitize(d.ucpArticle)}</span>` : ''}
           </div>
           <div class="discrepancy-detail">
@@ -1546,8 +1707,8 @@
           </div>
           <div class="discrepancy-explanation">${sanitize(d.explanation)}</div>
           ${d.affectedDocument ? `<div class="discrepancy-doc">Affected document: ${sanitize(d.affectedDocument)}</div>` : ''}
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
     } else {
       document.getElementById('discrepancyBlock').style.display = '';
       discrepancyList.innerHTML = '<div class="no-discrepancies">No discrepancies found. All documents appear to be in order.</div>';
