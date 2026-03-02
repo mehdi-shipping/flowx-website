@@ -4,7 +4,7 @@ export const config = { maxDuration: 60 };
 
 const client = new Anthropic();
 
-const SYSTEM_PROMPT = `You are a trade finance document classifier. For each document, identify: document_type (one of: lc_swift_mt700, lc_amendment_mt799, commercial_invoice, bill_of_lading, bill_of_exchange_draft, certificate_of_origin, certificate_of_quality, certificate_of_weight, insurance_certificate, vessel_certificate, draft_survey_report, inspection_report, packing_list, shipping_advice_email, unknown), lc_reference, bank_name, quantity_mt, invoice_reference, vessel_name, beneficiary, applicant, text_quality (full_text/partial_text/no_text), confidence (0-1). CRITICAL: If you see TWO DIFFERENT LC numbers or bank names or invoice numbers across documents, set multi_lc_transaction to true. A shipper letter or vessel certificate is NOT a Bill of Lading. SWIFT MT700 messages appear inside email text with field tags 27: 40A: 20: 31C: 46A: 47A:. If no text, classify by filename: LOT+quantity=inspection cert, REPORT=draft survey, LETTER=vessel cert. Respond ONLY valid JSON no markdown fences: {"multi_lc_transaction": bool, "transaction_summary": "string", "documents": [{"filename": "", "document_type": "", "lc_reference": "", "bank_name": "", "quantity_mt": "", "invoice_reference": "", "vessel_name": "", "beneficiary": "", "applicant": "", "text_quality": "", "confidence": 0}], "lc_groups": [{"lc_reference": "", "issuing_bank": "", "documents_belonging": ["filenames"]}]}`;
+const SYSTEM_PROMPT = `You are a trade finance document classifier. For each document, identify: document_type (one of: lc_swift_mt700, lc_amendment_mt799, commercial_invoice, bill_of_lading, bill_of_exchange_draft, certificate_of_origin, certificate_of_quality, certificate_of_weight, insurance_certificate, vessel_certificate, draft_survey_report, inspection_report, packing_list, shipping_advice_email, unknown), lc_reference, bank_name, quantity_mt, invoice_reference, vessel_name, beneficiary, applicant, text_quality (full_text/partial_text/no_text), confidence (0-1). CRITICAL: If you see TWO DIFFERENT LC numbers or bank names or invoice numbers across documents, set multi_lc_transaction to true. A shipper letter or vessel certificate is NOT a Bill of Lading. SWIFT MT700 messages appear inside email text with field tags 27: 40A: 20: 31C: 46A: 47A:. If no text, classify by filename: LOT+quantity=inspection cert, REPORT=draft survey, LETTER=vessel cert. Respond ONLY valid JSON no markdown fences: {"multi_lc_transaction": bool, "transaction_summary": "string", "documents": [{"filename": "", "document_type": "", "lc_reference": "", "bank_name": "", "quantity_mt": "", "invoice_reference": "", "vessel_name": "", "beneficiary": "", "applicant": "", "text_quality": "", "confidence": 0}], "lc_groups": [{"lc_reference": "", "issuing_bank": "", "documents_belonging": ["filenames"]}]} Be concise. Use short strings for all fields. Limit transaction_summary to one sentence. Set null for any field you cannot determine — do not explain why.`;
 
 function parseJSON(text) {
   let cleaned = text
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       message = await client.messages.create(
         {
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 2048,
+          max_tokens: 4096,
           system: SYSTEM_PROMPT,
           messages: [{ role: "user", content: `Classify these trade documents:\n\n${docTexts}` }],
         },
