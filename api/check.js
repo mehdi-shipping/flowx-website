@@ -72,8 +72,8 @@ export default async function handler(req, res) {
         }
 
         let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
-        if (!isLc && text.length > 4000) {
-          text = text.slice(0, 4000) + "\n[...truncated]";
+        if (!isLc && text.length > 2000) {
+          text = text.slice(0, 2000) + "\n[...truncated]";
         }
         docTexts.push(`--- ${filename} ---\n${text}`);
       }
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
       console.log(`Check LC ${group.lc_reference}: ${docTexts.length} docs, ~${userMessage.length} chars`);
 
       const message = await client.messages.create({
-        model: "claude-opus-4-6",
+        model: "claude-sonnet-4-5-20250929",
         max_tokens: 8192,
         system: SYSTEM_PROMPT,
         messages: [{ role: "user", content: userMessage }],

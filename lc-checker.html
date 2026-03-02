@@ -689,11 +689,12 @@
   function hideLoading() { document.getElementById('loadingSection').classList.remove('active'); }
 
   // ========== API HELPER ==========
-  async function callApi(endpoint, body) {
+  async function callApi(endpoint, body, signal) {
     const resp = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      ...(signal ? { signal } : {})
     });
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
@@ -759,7 +760,13 @@
       setStep(3);
       if (classification && parsing) {
         try {
-          checkResult = await callApi('/api/check', { classification, parsing, documents });
+          const checkController = new AbortController();
+          const checkTimeout = setTimeout(() => checkController.abort(), 120000);
+          try {
+            checkResult = await callApi('/api/check', { classification, parsing, documents }, checkController.signal);
+          } finally {
+            clearTimeout(checkTimeout);
+          }
           const analyses = checkResult.analysis_per_lc || [];
           const totalDisc = analyses.reduce((sum, a) => sum + (a.discrepancies || []).length, 0);
           setStepDetail(3, totalDisc > 0 ? `${totalDisc} potential finding${totalDisc !== 1 ? 's' : ''} identified` : 'No discrepancies found');
