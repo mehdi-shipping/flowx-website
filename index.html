@@ -73,6 +73,20 @@
   }
   .logo span { color: var(--teal); }
 
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .nav-links a {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--teal-light); }
+
   .nav-cta {
     background: var(--teal);
     color: #FFFFFF;
@@ -428,6 +442,59 @@
     line-height: 1.55;
   }
 
+  /* ========== FEATURES SECTION ========== */
+  .features-section {
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-dark) 100%);
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: all 0.3s;
+  }
+  .feature-card:hover {
+    border-color: var(--teal);
+    background: rgba(13,148,136,0.04);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    background: var(--teal-glow);
+  }
+  .feature-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .feature-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
   /* ========== WHO WE SERVE ========== */
   .serve-section {
     background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-dark) 100%);
@@ -468,6 +535,414 @@
     color: var(--text-muted);
     line-height: 1.5;
   }
+
+  /* ========== TESTIMONIALS ========== */
+  .testimonials-section {
+    background: var(--navy-dark);
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .testimonial-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--teal);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-subtle);
+    border-left-color: var(--teal);
+  }
+
+  .testimonial-quote-mark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: var(--teal);
+    opacity: 0.2;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .testimonial-text {
+    font-size: 0.92rem;
+    color: var(--text-body);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .testimonial-role {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+  }
+
+  /* ========== PRICING ========== */
+  .pricing-section {
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-dark) 100%);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .pricing-card:hover {
+    transform: translateY(-2px);
+  }
+  .pricing-card.featured {
+    border: 2px solid var(--teal);
+    position: relative;
+    box-shadow: 0 8px 40px rgba(13,148,136,0.1);
+  }
+  .pricing-card.featured::before {
+    content: 'Recommended';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--teal);
+    color: #FFFFFF;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 100px;
+  }
+
+  .pricing-tier {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .pricing-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+  .pricing-price span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .pricing-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .pricing-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+  .pricing-features li {
+    font-size: 0.84rem;
+    color: var(--text-body);
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pricing-features li:last-child { border-bottom: none; }
+  .pricing-features li::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background: var(--teal-glow);
+    border: 1px solid var(--teal);
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%230D9488' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px;
+  }
+
+  .pricing-cta {
+    display: inline-block;
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+    text-align: center;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    background: transparent;
+  }
+  .pricing-cta:hover {
+    background: var(--teal-glow);
+    transform: translateY(-1px);
+  }
+  .pricing-cta.primary {
+    background: var(--teal);
+    color: #FFFFFF;
+    border-color: var(--teal);
+  }
+  .pricing-cta.primary:hover {
+    background: var(--teal-light);
+    box-shadow: 0 6px 24px rgba(13,148,136,0.3);
+  }
+
+  /* ========== ABOUT / TEAM ========== */
+  .about-section {
+    background: var(--navy-dark);
+  }
+
+  .about-mission {
+    font-size: 1.1rem;
+    color: var(--text-body);
+    line-height: 1.8;
+    max-width: 800px;
+    margin-bottom: 3.5rem;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .team-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .team-card:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+  }
+
+  .team-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: #FFFFFF;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+  }
+
+  .team-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .team-role {
+    font-size: 0.78rem;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .team-bio {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ========== FAQ ========== */
+  .faq-section {
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 100%);
+  }
+
+  .faq-list {
+    max-width: 760px;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4rem 0;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+  }
+  .faq-question:hover { color: var(--teal-light); }
+
+  .faq-question span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .faq-question:hover span { color: var(--teal-light); }
+
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    position: relative;
+    margin-left: 1rem;
+  }
+  .faq-icon::before,
+  .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--text-muted);
+    border-radius: 2px;
+    transition: transform 0.3s ease;
+  }
+  .faq-icon::before {
+    width: 14px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .faq-icon::after {
+    width: 2px;
+    height: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .faq-item.open .faq-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+  }
+  .faq-answer p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    padding-bottom: 1.4rem;
+  }
+  .faq-item.open .faq-answer {
+    max-height: 300px;
+  }
+
+  /* ========== BLOG ========== */
+  .blog-section {
+    background: var(--navy-dark);
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .blog-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .blog-card:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+  }
+
+  .blog-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    background: var(--teal-glow);
+    border: 1px solid rgba(13,148,136,0.15);
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+    width: fit-content;
+  }
+
+  .blog-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-excerpt {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+
+  .blog-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .blog-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .blog-link {
+    font-size: 0.84rem;
+    color: var(--teal);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .blog-link:hover { color: var(--teal-light); }
 
   /* ========== CTA SECTION ========== */
   .cta-section {
@@ -537,37 +1012,76 @@
   /* ========== FOOTER ========== */
   footer {
     border-top: 1px solid var(--border-subtle);
-    padding: 2.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 4rem 2rem 2.5rem;
     max-width: 1100px;
     margin: 0 auto;
   }
 
-  .footer-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.2rem;
-    color: var(--white);
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
   }
-  .footer-logo span { color: var(--teal); }
+
+  .footer-brand .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+  }
+  .footer-brand .footer-logo span { color: var(--teal); }
+
+  .footer-tagline {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  .footer-col-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.3rem 0;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--teal-light); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
 
   .footer-text {
     font-size: 0.78rem;
     color: var(--text-muted);
   }
 
-  .footer-links {
+  .footer-bottom-links {
     display: flex;
     gap: 1.5rem;
   }
-  .footer-links a {
-    font-size: 0.8rem;
+  .footer-bottom-links a {
+    font-size: 0.78rem;
     color: var(--text-muted);
     text-decoration: none;
     transition: color 0.2s;
   }
-  .footer-links a:hover { color: var(--teal-light); }
+  .footer-bottom-links a:hover { color: var(--teal-light); }
 
   /* ========== SUCCESS STATE ========== */
   .form-success {
@@ -594,17 +1108,28 @@
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 768px) {
+    .nav-links { display: none; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
     .stat-item { border-bottom: 1px solid var(--border-subtle); }
     .problem-grid { grid-template-columns: 1fr; }
     .problem-icon { width: 56px; height: 56px; }
     .steps { flex-direction: column; gap: 2rem; }
     .steps::before { display: none; }
+    .feature-grid { grid-template-columns: 1fr; }
     .serve-grid { grid-template-columns: 1fr; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr; }
+    .blog-grid { grid-template-columns: 1fr; }
     .hero-form, .cta-form { flex-direction: column; align-items: center; }
     .hero-form input, .cta-form input { width: 100%; max-width: 360px; }
     .hero-form button, .cta-form button { width: 100%; max-width: 360px; }
-    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
   }
 
   /* ========== SCROLL REVEAL ========== */
@@ -624,6 +1149,12 @@
 <!-- NAV -->
 <nav>
   <a href="#" class="logo">Flow<span>X</span></a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#blog">Blog</a>
+  </div>
   <button class="nav-cta" onclick="document.querySelector('.cta-section').scrollIntoView({behavior:'smooth'})">Get Early Access</button>
 </nav>
 
@@ -818,6 +1349,59 @@
   </div>
 </section>
 
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="section-label reveal">Platform</div>
+    <h2 class="reveal">Everything you need to<br>manage trade complexity</h2>
+    <p class="section-desc reveal">Six core capabilities that turn fragmented trade operations into a streamlined, intelligent workflow.</p>
+    <div class="feature-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="feature-name">Smart Document Capture</div>
+        <div class="feature-desc">AI reads emails, PDFs, and attachments to extract trade data automatically. No manual entry, no missed details.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="feature-name">Trade Timeline</div>
+        <div class="feature-desc">Visual timeline of every milestone, deadline, and obligation in one view. Always know where each trade stands.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><line x1="9" y1="12" x2="15" y2="12"/><polyline points="12 9 15 12 12 15"/></svg>
+        </div>
+        <div class="feature-name">Discrepancy Detection</div>
+        <div class="feature-desc">Instant cross-check of L/C terms against shipping docs and contracts. Catch issues before they become costly rejections.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M6 8l4 4 3-3 5 5"/></svg>
+        </div>
+        <div class="feature-name">Risk Dashboard</div>
+        <div class="feature-desc">Real-time financial exposure across all active trades with alerts. Monitor counterparty risk, deadlines, and compliance gaps.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        </div>
+        <div class="feature-name">Workflow Automation</div>
+        <div class="feature-desc">Auto-generate responses, amendment requests, and compliance docs. Reduce manual work by 80% on routine trade operations.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="feature-name">Multi-Party Collaboration</div>
+        <div class="feature-desc">Shared workspace for all counterparties with role-based access. Keep every party aligned without endless email chains.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- WHO WE SERVE -->
 <section class="serve-section">
   <div class="container">
@@ -859,6 +1443,214 @@
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-label reveal">What People Say</div>
+    <h2 class="reveal">Trusted by trade<br>professionals worldwide</h2>
+    <p class="section-desc reveal">Hear from the teams already transforming their trade operations with FlowX.</p>
+    <div class="testimonial-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote-mark">"</div>
+        <div class="testimonial-text">FlowX has completely changed how we handle documentary credits. What used to take days now takes minutes.</div>
+        <div class="testimonial-author">Sarah Chen</div>
+        <div class="testimonial-role">Head of Trade Ops, Pacific Commodities</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote-mark">"</div>
+        <div class="testimonial-text">The discrepancy detection alone saved us $200K in the first quarter. We catch issues before they become costly rejections.</div>
+        <div class="testimonial-author">Marcus Weber</div>
+        <div class="testimonial-role">VP Trade Finance, Rhine Trading AG</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote-mark">"</div>
+        <div class="testimonial-text">Finally, a platform that understands the complexity of commodity trade. Our team's productivity has doubled.</div>
+        <div class="testimonial-author">Amira Hassan</div>
+        <div class="testimonial-role">Operations Director, Gulf Metals Corp</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="section-label reveal">Pricing</div>
+    <h2 class="reveal">Simple, transparent pricing<br>for every team</h2>
+    <p class="section-desc reveal">Start free and scale as your trade operations grow. No hidden fees.</p>
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">Free</div>
+        <div class="pricing-desc">For small teams exploring FlowX</div>
+        <ul class="pricing-features">
+          <li>Up to 5 trades/month</li>
+          <li>1 user</li>
+          <li>Email capture</li>
+          <li>Basic timeline</li>
+        </ul>
+        <a href="#" class="pricing-cta">Get Started Free</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-tier">Professional</div>
+        <div class="pricing-price">$499 <span>/mo</span></div>
+        <div class="pricing-desc">For growing trade desks</div>
+        <ul class="pricing-features">
+          <li>Unlimited trades</li>
+          <li>Up to 10 users</li>
+          <li>Full discrepancy detection</li>
+          <li>Risk dashboard</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="pricing-cta primary">Start Free Trial</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-price">Custom</div>
+        <div class="pricing-desc">For trading houses and banks</div>
+        <ul class="pricing-features">
+          <li>Unlimited everything</li>
+          <li>SSO & API access</li>
+          <li>Dedicated account manager</li>
+          <li>Custom integrations</li>
+        </ul>
+        <a href="mailto:founders@flowx.io" class="pricing-cta">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="section-label reveal">About FlowX</div>
+    <h2 class="reveal">Built by people who lived<br>the problem</h2>
+    <p class="about-mission reveal">FlowX was born from firsthand experience with commodity trade inefficiency. After years of watching billions in value destroyed by manual processes, fragmented communication, and preventable document errors, our founding team set out to build the platform they wished existed. We combine deep domain expertise in commodity trading, trade finance, and enterprise software to create tools that actually work for the people on the front lines of global trade.</p>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">MM</div>
+        <div class="team-name">Mehdi Meliani</div>
+        <div class="team-role">Co-Founder & CEO</div>
+        <div class="team-bio">Background in commodity trading and fintech. Experienced the documentation chaos firsthand across 100+ trades.</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">AR</div>
+        <div class="team-name">Alex Renaud</div>
+        <div class="team-role">Co-Founder & CTO</div>
+        <div class="team-bio">Former engineering lead at a top trade-tech platform. Built systems processing millions of trade documents.</div>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">NH</div>
+        <div class="team-name">Nadia Haris</div>
+        <div class="team-role">Co-Founder & COO</div>
+        <div class="team-bio">10+ years in trade finance operations at a global bank. Deep expertise in L/C processing and compliance.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div class="section-label reveal">Frequently Asked Questions</div>
+    <h2 class="reveal">Got questions?<br>We've got answers</h2>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>What is FlowX?</span>
+          <div class="faq-icon"></div>
+        </div>
+        <div class="faq-answer">
+          <p>FlowX is an AI-powered platform that automatically captures, structures, and monitors every element of a commodity trade. It connects to your email and document systems, extracts key data from trade documents, and gives you a real-time view of every obligation, deadline, and risk across your entire portfolio.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How does FlowX integrate with our existing tools?</span>
+          <div class="faq-icon"></div>
+        </div>
+        <div class="faq-answer">
+          <p>FlowX connects to your email, ERP, and document management systems via API. We offer pre-built integrations with major platforms and can build custom connectors for your specific tech stack. Your existing workflows continue uninterrupted while FlowX works in the background.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Is our data secure?</span>
+          <div class="faq-icon"></div>
+        </div>
+        <div class="faq-answer">
+          <p>Yes. FlowX uses bank-grade encryption (AES-256), SOC 2 Type II compliance, and data never leaves your chosen region. We support single-tenant deployment for enterprise clients and maintain strict access controls with full audit logging.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How long does onboarding take?</span>
+          <div class="faq-icon"></div>
+        </div>
+        <div class="faq-answer">
+          <p>Most teams are up and running within 2 weeks. Our onboarding specialists handle migration, integration setup, and team training. We work alongside your operations team to ensure FlowX fits seamlessly into your existing processes.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>What commodities does FlowX support?</span>
+          <div class="faq-icon"></div>
+        </div>
+        <div class="faq-answer">
+          <p>FlowX supports all major commodity classes: metals, energy, agriculture, and soft commodities. Our AI models are trained on trade documents across all these verticals, so whether you're trading copper, crude oil, or coffee, FlowX understands your specific document requirements.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Can we try FlowX before committing?</span>
+          <div class="faq-icon"></div>
+        </div>
+        <div class="faq-answer">
+          <p>Absolutely. Our Professional plan comes with a 14-day free trial, no credit card required. You can also start with our free Starter plan to explore the platform at your own pace before upgrading.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="blog-section" id="blog">
+  <div class="container">
+    <div class="section-label reveal">Insights</div>
+    <h2 class="reveal">Latest from FlowX</h2>
+    <p class="section-desc reveal">Perspectives on the future of commodity trade operations.</p>
+    <div class="blog-grid">
+      <div class="blog-card reveal">
+        <div class="blog-tag">Industry</div>
+        <div class="blog-title">The $50 Billion Cost of Paper in Commodity Trade</div>
+        <div class="blog-excerpt">An analysis of how manual documentation processes drain value from the global commodity supply chain — and what it will take to change.</div>
+        <div class="blog-meta">
+          <span class="blog-date">Feb 2026</span>
+          <a href="#" class="blog-link">Read more &rarr;</a>
+        </div>
+      </div>
+      <div class="blog-card reveal">
+        <div class="blog-tag">Product</div>
+        <div class="blog-title">How AI is Transforming Trade Document Processing</div>
+        <div class="blog-excerpt">A deep dive into how machine learning can detect discrepancies in letters of credit and shipping documents faster than any human team.</div>
+        <div class="blog-meta">
+          <span class="blog-date">Jan 2026</span>
+          <a href="#" class="blog-link">Read more &rarr;</a>
+        </div>
+      </div>
+      <div class="blog-card reveal">
+        <div class="blog-tag">Compliance</div>
+        <div class="blog-title">Navigating UCP 600: A Digital-First Approach</div>
+        <div class="blog-excerpt">How technology is helping banks and traders meet ICC standards while reducing the operational burden of documentary credit compliance.</div>
+        <div class="blog-meta">
+          <span class="blog-date">Dec 2025</span>
+          <a href="#" class="blog-link">Read more &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section">
   <div class="container reveal">
@@ -878,11 +1670,35 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Flow<span>X</span></div>
-  <div class="footer-text">© 2026 FlowX. All rights reserved.</div>
-  <div class="footer-links">
-    <a href="mailto:founders@flowx.io">Contact</a>
-    <a href="#">LinkedIn</a>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">Flow<span>X</span></div>
+      <div class="footer-tagline">Turning commodity trade complexity into clarity. AI-powered trade operations for the modern world.</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Product</div>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#blog">Blog</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:founders@flowx.io">Contact</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Connect</div>
+      <a href="#">LinkedIn</a>
+      <a href="#">Twitter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-text">&copy; 2026 FlowX. All rights reserved.</div>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
   </div>
 </footer>
 
@@ -909,7 +1725,7 @@
     // Hide form, show success
     document.getElementById(formId).style.display = 'none';
     document.getElementById(successId).classList.add('show');
-    
+
     // In production: send to your email service / API
     console.log('Signup:', email);
   }
@@ -922,6 +1738,22 @@
     } else {
       nav.style.padding = '1.25rem 2rem';
     }
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+      const item = question.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all other items
+      document.querySelectorAll('.faq-item.open').forEach(openItem => {
+        openItem.classList.remove('open');
+      });
+      // Toggle current item
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    });
   });
 </script>
 
