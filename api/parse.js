@@ -45,11 +45,11 @@ export default async function handler(req, res) {
       documents.map(d => [d.name, d.text || ""])
     );
 
-    // Find filenames not assigned to any LC group
+    // Find filenames classified as unknown with no text — send as filename-only stubs
     const assignedFiles = new Set(lcGroups.flatMap(g => g.documents_belonging || []));
-    const unmatchedFiles = documents
-      .filter(d => !assignedFiles.has(d.name))
-      .map(d => d.name);
+    const unknownNoTextFiles = (classification.documents || [])
+      .filter(d => !assignedFiles.has(d.filename) && d.text_quality === "no_text")
+      .map(d => d.filename);
 
     // Process each LC group separately
     const lcResults = [];
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     for (const group of lcGroups) {
       const belongingFiles = group.documents_belonging || [];
 
-      // Build doc texts for this LC group
+      // Build doc texts: ONLY this LC's documents
       const docTexts = [];
 
       for (const filename of belongingFiles) {
@@ -65,38 +65,28 @@ export default async function handler(req, res) {
         const isLc = cls && lcTypes.has(cls.document_type);
         const isNoText = cls && cls.text_quality === "no_text";
 
+        // Scanned/unreadable: filename only
         if (isNoText) {
-          docTexts.push(`--- ${filename} ---\n[No text — classified as ${cls.document_type}]`);
+          docTexts.push(`FILENAME: ${filename} — scanned, no text available`);
           continue;
         }
 
         let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
+        // LC docs: full text. Others: truncate to 4000 chars.
         if (!isLc && text.length > 4000) {
           text = text.slice(0, 4000) + "\n[...truncated]";
         }
         docTexts.push(`--- ${filename} ---\n${text}`);
       }
 
-      // Add unmatched docs so the model can try to match them
-      for (const filename of unmatchedFiles) {
-        const cls = classifiedDocs.get(filename);
-        const isNoText = cls && cls.text_quality === "no_text";
-
-        if (isNoText) {
-          docTexts.push(`--- ${filename} [UNMATCHED] ---\n[No text — classified as ${cls ? cls.document_type : "unknown"}]`);
-          continue;
-        }
-
-        let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
-        if (text.length > 4000) {
-          text = text.slice(0, 4000) + "\n[...truncated]";
-        }
-        docTexts.push(`--- ${filename} [UNMATCHED] ---\n${text}`);
+      // Add unknown/no_text docs as filename-only stubs (no text body)
+      for (const filename of unknownNoTextFiles) {
+        docTexts.push(`FILENAME: ${filename} — scanned, no text available`);
       }
 
       const userMessage = `LC Reference: ${group.lc_reference || "unknown"}\nIssuing Bank: ${group.issuing_bank || "unknown"}\n\nDocuments:\n${docTexts.join("\n\n")}`;
 
-      console.log(`Parse LC ${group.lc_reference}: ${docTexts.length} docs, ~${userMessage.length} chars`);
+      console.log("Parse LC " + (group.lc_reference || "?") + ": " + docTexts.length + " docs, ~" + userMessage.length + " chars");
 
       const message = await client.messages.create({
         model: "claude-sonnet-4-5-20250929",
