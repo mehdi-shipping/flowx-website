@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     try {
       message = await client.messages.create(
         {
-          model: "claude-opus-4-6-20250116",
+          model: "claude-opus-4-6",
           max_tokens: 8192,
           system: SYSTEM_PROMPT,
           messages: [{ role: "user", content: userMessage }],
