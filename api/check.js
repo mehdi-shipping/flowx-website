@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-export const config = { maxDuration: 60 };
+export const config = { maxDuration: 300 };
 
 const client = new Anthropic();
 

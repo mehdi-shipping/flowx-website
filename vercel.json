@@ -1,16 +1,16 @@
 {
   "functions": {
     "api/classify.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "api/parse.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "api/check.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "api/verify.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     }
   }
 }

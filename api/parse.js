@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-export const config = { maxDuration: 60 };
+export const config = { maxDuration: 300 };
 
 const client = new Anthropic();
 
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
       console.log("Parse LC " + (group.lc_reference || "?") + ": " + docTexts.length + " docs, ~" + userMessage.length + " chars");
 
       const message = await client.messages.create({
-        model: "claude-haiku-4-5-20251001",
+        model: "claude-sonnet-4-5-20250929",
         max_tokens: 8192,
         system: SYSTEM_PROMPT,
         messages: [{ role: "user", content: userMessage }],
