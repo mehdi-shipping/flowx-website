@@ -15,7 +15,7 @@ Check for:
 
 If only an L/C is provided, analyze it for internal issues and list documents that will be needed. If no L/C is found, analyze available docs for common issues and note that no L/C was identified.
 
-Respond with ONLY valid JSON, no markdown or code fences:
+Respond with ONLY raw JSON. No markdown, no code fences, no backticks, no explanation before or after.
 {"verdict":"COMPLIANT"|"DISCREPANCIES_FOUND"|"MAJOR_ISSUES","summary":"One sentence","documentChecklist":[{"document":"Name","required":true,"presented":true|false,"notes":""}],"discrepancies":[{"id":1,"severity":"critical"|"major"|"minor","title":"Short title","ucpArticle":"UCP 600 Art. XX"|null,"lcRequirement":"What L/C requires","actualValue":"What doc states","explanation":"Why and consequences","affectedDocument":"Doc name"}],"recommendedActions":[{"priority":1,"action":"What to do","rationale":"Why"}]}`;
 
 export default async function handler(req, res) {
@@ -90,15 +90,29 @@ export default async function handler(req, res) {
       message.content[0].type === "text" ? message.content[0].text : "";
 
     // Parse the JSON response
+    console.log("Raw AI response:", responseText);
+
     let analysis;
     try {
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        analysis = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error("No JSON found in response");
+      // Strip markdown code fences if present
+      let cleaned = responseText.trim();
+      cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/,  "");
+      cleaned = cleaned.trim();
+
+      // Try direct parse first, then fall back to regex extraction
+      try {
+        analysis = JSON.parse(cleaned);
+      } catch {
+        const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          analysis = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("No JSON object found in response");
+        }
       }
-    } catch {
+    } catch (parseErr) {
+      console.error("JSON parse error:", parseErr.message);
+      console.error("Response was:", responseText.slice(0, 500));
       return res.status(500).json({
         error: "The AI returned an unexpected format. Please try again.",
       });
