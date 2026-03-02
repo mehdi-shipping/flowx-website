@@ -8,30 +8,30 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy-dark: #F5F1EB;
-    --navy: #FFFFFF;
-    --navy-mid: #EDE8E0;
+    --navy-dark: #0B1A2E;
+    --navy: #132238;
+    --navy-mid: #1A2D45;
     --teal: #0D9488;
-    --teal-light: #0F766E;
-    --teal-glow: rgba(13,148,136,0.06);
-    --gold: #B45309;
-    --gold-light: rgba(180,83,9,0.06);
-    --light-bg: #F0EDE8;
-    --white: #1C1917;
-    --text-muted: #78716C;
-    --text-body: #44403C;
-    --border-subtle: rgba(0,0,0,0.07);
+    --teal-light: #14B8A6;
+    --teal-glow: rgba(13,148,136,0.12);
+    --gold: #D4A853;
+    --gold-light: rgba(212,168,83,0.12);
     --red: #DC2626;
+    --red-light: rgba(220,38,38,0.12);
     --green: #16A34A;
+    --green-light: rgba(22,163,74,0.12);
     --orange: #EA580C;
+    --orange-light: rgba(234,88,12,0.12);
+    --blue: #3B82F6;
+    --blue-light: rgba(59,130,246,0.12);
+    --white: #FFFFFF;
+    --text-body: #C8D4E0;
+    --text-muted: #8899AA;
+    --border-subtle: rgba(255,255,255,0.08);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-  }
+  html { scroll-behavior: smooth; font-size: 16px; }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -41,7 +41,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ========== GRAIN OVERLAY ========== */
   body::before {
     content: '';
     position: fixed;
@@ -53,1057 +52,349 @@
 
   /* ========== NAV ========== */
   nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 100;
+    position: fixed; top: 0; width: 100%; z-index: 100;
     padding: 1.25rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
     backdrop-filter: blur(20px);
-    background: rgba(245,241,235,0.92);
+    background: rgba(11,26,46,0.92);
     border-bottom: 1px solid var(--border-subtle);
     transition: all 0.3s ease;
   }
-
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.6rem;
-    color: var(--white);
-    letter-spacing: -0.02em;
-    text-decoration: none;
-  }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--white); letter-spacing: -0.02em; text-decoration: none; }
   .logo span { color: var(--teal); }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
-  .nav-links a {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-links a { font-size: 0.85rem; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
   .nav-links a:hover { color: var(--teal-light); }
-  .nav-links a.active {
-    color: var(--teal);
-    font-weight: 600;
-  }
-
+  .nav-links a.active { color: var(--teal); font-weight: 600; }
   .nav-cta {
-    background: var(--teal);
-    color: #FFFFFF;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    letter-spacing: 0.02em;
-    text-decoration: none;
+    background: var(--teal); color: #fff; border: none; padding: 0.6rem 1.5rem; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    transition: all 0.25s ease; letter-spacing: 0.02em; text-decoration: none;
   }
-  .nav-cta:hover {
-    background: var(--teal-light);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(13,148,136,0.3);
-  }
+  .nav-cta:hover { background: var(--teal-light); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(13,148,136,0.3); }
 
-  /* ========== CONTAINER ========== */
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  section {
-    padding: 6rem 2rem;
-  }
-
-  .section-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--teal);
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-
-  h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    color: var(--white);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.2rem;
-  }
-
-  .section-desc {
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    max-width: 600px;
-    line-height: 1.7;
-    margin-bottom: 3.5rem;
-  }
+  /* ========== LAYOUT ========== */
+  .container { max-width: 1100px; margin: 0 auto; }
+  section { padding: 6rem 2rem; }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 1rem; }
 
   /* ========== HERO ========== */
   .hero {
-    min-height: 50vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 8rem 2rem 4rem;
-    position: relative;
-    overflow: hidden;
+    min-height: 44vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 8rem 2rem 3rem; position: relative; overflow: hidden;
   }
-
   .hero::before {
-    content: '';
-    position: absolute;
-    top: -30%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(13,148,136,0.08) 0%, transparent 70%);
-    pointer-events: none;
+    content: ''; position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px; background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%); pointer-events: none;
   }
-
   .hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--teal), transparent);
-    opacity: 0.3;
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent); opacity: 0.3;
   }
-
   .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--teal-glow);
-    border: 1px solid rgba(13,148,136,0.2);
-    color: var(--teal);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.45rem 1.1rem;
-    border-radius: 100px;
-    margin-bottom: 2.5rem;
-    animation: fadeDown 0.8s ease forwards;
-    opacity: 0;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--teal-glow); border: 1px solid rgba(13,148,136,0.3); color: var(--teal-light);
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.45rem 1.1rem; border-radius: 100px; margin-bottom: 2rem;
+    animation: fadeDown 0.8s ease forwards; opacity: 0;
   }
-
   h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
-    color: var(--white);
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    max-width: 800px;
-    margin-bottom: 1.5rem;
-    animation: fadeDown 0.8s 0.15s ease forwards;
-    opacity: 0;
+    font-family: 'DM Serif Display', serif; font-size: clamp(2.4rem, 5vw, 3.8rem); color: var(--white);
+    line-height: 1.08; letter-spacing: -0.03em; max-width: 800px; margin-bottom: 1.5rem;
+    animation: fadeDown 0.8s 0.15s ease forwards; opacity: 0;
   }
-
   .hero-sub {
-    font-size: clamp(1rem, 2vw, 1.15rem);
-    color: var(--text-muted);
-    max-width: 620px;
-    line-height: 1.65;
-    margin-bottom: 2rem;
-    animation: fadeDown 0.8s 0.3s ease forwards;
-    opacity: 0;
+    font-size: clamp(1rem, 2vw, 1.15rem); color: var(--text-muted); max-width: 620px;
+    line-height: 1.65; margin-bottom: 2rem; animation: fadeDown 0.8s 0.3s ease forwards; opacity: 0;
   }
-
   .hero-features {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeDown 0.8s 0.45s ease forwards;
-    opacity: 0;
+    display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
+    animation: fadeDown 0.8s 0.45s ease forwards; opacity: 0;
   }
+  .hero-feature { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--text-body); font-weight: 500; }
+  .hero-feature svg { flex-shrink: 0; color: var(--teal); }
 
-  .hero-feature {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.88rem;
-    color: var(--text-body);
-    font-weight: 500;
-  }
-
-  .hero-feature svg {
-    flex-shrink: 0;
-    color: var(--teal);
-  }
-
-  /* ========== UPLOAD SECTION ========== */
-  .upload-section {
-    background: var(--navy-dark);
-    padding-top: 2rem;
-  }
-
-  .upload-wrapper {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
+  /* ========== UPLOAD ========== */
+  .upload-section { padding-top: 2rem; }
+  .upload-wrapper { max-width: 720px; margin: 0 auto; }
   .drop-zone {
-    border: 2px dashed rgba(13,148,136,0.3);
-    border-radius: 12px;
-    padding: 3rem 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255,255,255,0.5);
-    position: relative;
+    border: 2px dashed rgba(13,148,136,0.35); border-radius: 12px; padding: 3rem 2rem;
+    text-align: center; cursor: pointer; transition: all 0.3s ease;
+    background: rgba(19,34,56,0.6); position: relative;
   }
+  .drop-zone:hover, .drop-zone.dragover { border-color: var(--teal); background: rgba(13,148,136,0.08); }
+  .drop-zone-icon { margin-bottom: 1rem; color: var(--teal); }
+  .drop-zone-text { font-size: 1rem; color: var(--white); font-weight: 600; margin-bottom: 0.5rem; }
+  .drop-zone-hint { font-size: 0.84rem; color: var(--text-muted); }
+  .drop-zone-formats { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; opacity: 0.7; }
+  .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
-  .drop-zone:hover,
-  .drop-zone.dragover {
-    border-color: var(--teal);
-    background: rgba(13,148,136,0.04);
-  }
-
-  .drop-zone-icon {
-    margin-bottom: 1rem;
-    color: var(--teal);
-  }
-
-  .drop-zone-text {
-    font-size: 1rem;
-    color: var(--white);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .drop-zone-hint {
-    font-size: 0.84rem;
-    color: var(--text-muted);
-  }
-
-  .drop-zone input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  /* File list */
-  .file-list {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
+  .file-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
   .file-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    background: rgba(255,255,255,0.7);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    animation: fadeDown 0.3s ease forwards;
+    display: flex; align-items: center; gap: 0.75rem;
+    background: var(--navy); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.75rem 1rem;
   }
-
   .file-icon {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    background: var(--teal-glow);
-    border: 1px solid rgba(13,148,136,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--teal);
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 6px;
+    background: var(--teal-glow); border: 1px solid rgba(13,148,136,0.2);
+    display: flex; align-items: center; justify-content: center; color: var(--teal);
   }
-
-  .file-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .file-name {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--white);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .file-size {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-
+  .file-info { flex: 1; min-width: 0; }
+  .file-name { font-size: 0.88rem; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-size { font-size: 0.75rem; color: var(--text-muted); }
   .file-remove {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border: none;
-    background: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
+    flex-shrink: 0; width: 28px; height: 28px; border: none; background: none;
+    color: var(--text-muted); cursor: pointer; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
   }
-  .file-remove:hover {
-    background: rgba(220,38,38,0.08);
-    color: var(--red);
-  }
+  .file-remove:hover { background: var(--red-light); color: var(--red); }
 
-  /* Analyze button */
   .analyze-btn {
-    display: block;
-    width: 100%;
-    margin-top: 1.5rem;
-    padding: 1rem 2rem;
-    background: var(--teal);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
+    display: block; width: 100%; margin-top: 1.5rem; padding: 1rem 2rem;
+    background: var(--teal); color: #fff; border: none; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.25s;
   }
-  .analyze-btn:hover:not(:disabled) {
-    background: var(--teal-light);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(13,148,136,0.3);
-  }
-  .analyze-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  .analyze-btn:hover:not(:disabled) { background: var(--teal-light); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(13,148,136,0.3); }
+  .analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ========== LOADING SECTION ========== */
-  .loading-section {
-    display: none;
-    text-align: center;
-    padding: 4rem 2rem;
+  .status-message {
+    display: none; border-radius: 8px; padding: 0.75rem 1.25rem; margin-top: 1rem;
+    font-size: 0.88rem; line-height: 1.5; text-align: center;
   }
+  .status-message.error { background: var(--red-light); border: 1px solid rgba(220,38,38,0.3); color: #F87171; display: block; }
+  .status-message.ocr { background: var(--gold-light); border: 1px solid rgba(212,168,83,0.3); color: var(--gold); display: block; }
 
-  .loading-section.active {
-    display: block;
-  }
-
+  /* ========== LOADING ========== */
+  .loading-section { display: none; text-align: center; padding: 4rem 2rem; }
+  .loading-section.active { display: block; }
   .spinner {
-    width: 48px;
-    height: 48px;
-    border: 3px solid var(--border-subtle);
-    border-top-color: var(--teal);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 2rem;
+    width: 48px; height: 48px; border: 3px solid var(--border-subtle); border-top-color: var(--teal);
+    border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 2rem;
   }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .loading-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 360px;
-    margin: 0 auto;
-  }
-
-  .loading-step {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    transition: color 0.3s;
-  }
-
-  .loading-step.active {
-    color: var(--teal);
-    font-weight: 600;
-  }
-
-  .loading-step.done {
-    color: var(--green);
-  }
-
+  .loading-steps { display: flex; flex-direction: column; gap: 1rem; max-width: 420px; margin: 0 auto; }
+  .loading-step { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: var(--text-muted); transition: color 0.3s; }
+  .loading-step.active { color: var(--teal-light); font-weight: 600; }
+  .loading-step.done { color: var(--green); }
   .loading-step-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 2px solid var(--border-subtle);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.3s;
+    width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s;
+  }
+  .loading-step.active .loading-step-icon { border-color: var(--teal); background: var(--teal-glow); }
+  .loading-step.done .loading-step-icon { border-color: var(--green); background: var(--green-light); }
+  .loading-step-detail { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; font-weight: 400; }
+
+  /* ========== RESULTS ========== */
+  .results-section { display: none; padding-bottom: 2rem; }
+  .results-section.active { display: block; }
+  .results-wrapper { max-width: 900px; margin: 0 auto; }
+
+  /* Verify summary */
+  .verify-summary {
+    background: var(--teal-glow); border: 1px solid rgba(13,148,136,0.3); border-radius: 8px;
+    padding: 0.75rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--teal-light);
+    font-weight: 500; display: flex; align-items: center; gap: 0.5rem;
   }
 
-  .loading-step.active .loading-step-icon {
-    border-color: var(--teal);
-    background: var(--teal-glow);
+  /* Transaction overview */
+  .tx-overview {
+    background: var(--navy); border: 1px solid var(--border-subtle); border-radius: 12px;
+    padding: 1.5rem 2rem; margin-bottom: 2rem;
   }
+  .tx-overview-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--white); margin-bottom: 1rem; }
+  .tx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+  .tx-item-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 0.2rem; }
+  .tx-item-value { font-size: 0.92rem; color: var(--white); font-weight: 500; }
 
-  .loading-step.done .loading-step-icon {
-    border-color: var(--green);
-    background: rgba(22,163,74,0.08);
+  /* LC card */
+  .lc-card {
+    background: var(--navy); border: 1px solid var(--border-subtle); border-radius: 12px;
+    margin-bottom: 1.5rem; overflow: hidden;
   }
-
-  /* ========== RESULTS SECTION ========== */
-  .results-section {
-    display: none;
-    padding-bottom: 2rem;
+  .lc-card-header {
+    padding: 1.25rem 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 1rem;
+    transition: background 0.2s; user-select: none;
   }
-
-  .results-section.active {
-    display: block;
+  .lc-card-header:hover { background: rgba(255,255,255,0.03); }
+  .lc-card-toggle {
+    width: 20px; height: 20px; flex-shrink: 0; transition: transform 0.3s;
+    color: var(--text-muted);
   }
+  .lc-card.open .lc-card-toggle { transform: rotate(90deg); }
+  .lc-card-info { flex: 1; min-width: 0; }
+  .lc-card-ref { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--white); }
+  .lc-card-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
 
-  .results-wrapper {
-    max-width: 860px;
-    margin: 0 auto;
+  .verdict-badge {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem; border-radius: 100px; flex-shrink: 0;
   }
+  .verdict-badge.compliant { background: var(--green-light); color: var(--green); }
+  .verdict-badge.discrepant { background: var(--red-light); color: #F87171; }
+  .verdict-badge.incomplete { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+  .verdict-badge.issues { background: var(--orange-light); color: var(--orange); }
 
-  /* Verdict banner */
-  .verdict-banner {
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    border: 1px solid var(--border-subtle);
-  }
-
-  .verdict-banner.compliant {
-    background: rgba(22,163,74,0.06);
-    border-color: rgba(22,163,74,0.2);
-  }
-
-  .verdict-banner.discrepancies {
-    background: rgba(234,88,12,0.06);
-    border-color: rgba(234,88,12,0.2);
-  }
-
-  .verdict-banner.major {
-    background: rgba(220,38,38,0.06);
-    border-color: rgba(220,38,38,0.2);
-  }
-
-  .verdict-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .verdict-banner.compliant .verdict-icon {
-    background: rgba(22,163,74,0.12);
-    color: var(--green);
-  }
-
-  .verdict-banner.discrepancies .verdict-icon {
-    background: rgba(234,88,12,0.12);
-    color: var(--orange);
-  }
-
-  .verdict-banner.major .verdict-icon {
-    background: rgba(220,38,38,0.12);
-    color: var(--red);
-  }
-
-  .verdict-text h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .verdict-banner.compliant .verdict-text h3 { color: var(--green); }
-  .verdict-banner.discrepancies .verdict-text h3 { color: var(--orange); }
-  .verdict-banner.major .verdict-text h3 { color: var(--red); }
-
-  .verdict-summary {
-    font-size: 0.92rem;
-    color: var(--text-body);
-    line-height: 1.6;
-  }
-
-  .verdict-counts {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.75rem;
-  }
-
-  .verdict-count {
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-  }
-
-  .verdict-count.critical {
-    background: rgba(220,38,38,0.1);
-    color: var(--red);
-  }
-
-  .verdict-count.major-count {
-    background: rgba(234,88,12,0.1);
-    color: var(--orange);
-  }
-
-  .verdict-count.minor {
-    background: rgba(13,148,136,0.1);
-    color: var(--teal);
-  }
-
-  /* Results sub-sections */
-  .results-block {
-    margin-bottom: 2rem;
-  }
-
-  .results-block-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.25rem;
-    color: var(--white);
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-subtle);
-  }
+  .lc-card-body { display: none; padding: 0 1.5rem 1.5rem; border-top: 1px solid var(--border-subtle); }
+  .lc-card.open .lc-card-body { display: block; }
+  .lc-card-summary { font-size: 0.9rem; color: var(--text-body); line-height: 1.6; padding: 1rem 0; }
 
   /* Document checklist */
-  .checklist-table {
-    width: 100%;
-    border-collapse: collapse;
+  .block-title {
+    font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--white);
+    margin: 1.25rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle);
   }
-
+  .checklist-table { width: 100%; border-collapse: collapse; }
   .checklist-table th {
-    text-align: left;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 600;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--border-subtle);
+    text-align: left; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 600; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-subtle);
   }
-
   .checklist-table td {
-    padding: 0.75rem 1rem;
-    font-size: 0.88rem;
-    color: var(--text-body);
-    border-bottom: 1px solid var(--border-subtle);
-    vertical-align: top;
+    padding: 0.6rem 0.75rem; font-size: 0.85rem; color: var(--text-body);
+    border-bottom: 1px solid var(--border-subtle); vertical-align: top;
   }
-
-  .checklist-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .checklist-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-weight: 600;
-    font-size: 0.84rem;
-  }
-
-  .checklist-status.presented { color: var(--green); }
-  .checklist-status.missing { color: var(--red); }
-
-  .checklist-notes {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-  }
+  .checklist-table tr:last-child td { border-bottom: none; }
+  .status-presented { color: var(--green); font-weight: 600; }
+  .status-missing { color: var(--red); font-weight: 600; }
+  .status-unverifiable { color: var(--gold); font-weight: 600; }
+  .checklist-notes { font-size: 0.78rem; color: var(--text-muted); }
 
   /* Discrepancy cards */
-  .discrepancy-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .discrepancy-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .disc-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.25rem; position: relative; overflow: hidden;
   }
+  .disc-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; }
+  .disc-card.critical::before { background: var(--red); }
+  .disc-card.major::before { background: var(--orange); }
+  .disc-card.minor::before { background: var(--gold); }
+  .disc-card.observation::before { background: var(--blue); }
 
-  .discrepancy-card {
-    background: rgba(255,255,255,0.7);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
+  .disc-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .sev-badge {
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.15rem 0.5rem; border-radius: 100px;
   }
+  .sev-badge.critical { background: var(--red-light); color: #F87171; }
+  .sev-badge.major { background: var(--orange-light); color: var(--orange); }
+  .sev-badge.minor { background: var(--gold-light); color: var(--gold); }
+  .sev-badge.observation { background: var(--blue-light); color: var(--blue); }
 
-  .discrepancy-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 4px;
+  .conf-badge {
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.15rem 0.5rem; border-radius: 100px;
   }
+  .conf-badge.high { background: var(--green-light); color: var(--green); }
+  .conf-badge.medium { background: var(--gold-light); color: var(--gold); }
 
-  .discrepancy-card.critical::before { background: var(--red); }
-  .discrepancy-card.major::before { background: var(--orange); }
-  .discrepancy-card.minor::before { background: var(--teal); }
-
-  .discrepancy-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .severity-badge {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-  }
-
-  .severity-badge.critical {
-    background: rgba(220,38,38,0.1);
-    color: var(--red);
-  }
-
-  .severity-badge.major {
-    background: rgba(234,88,12,0.1);
-    color: var(--orange);
-  }
-
-  .severity-badge.minor {
-    background: rgba(13,148,136,0.1);
-    color: var(--teal);
-  }
-
-  .discrepancy-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--white);
-    flex: 1;
-  }
-
+  .disc-title { font-size: 0.95rem; font-weight: 600; color: var(--white); flex: 1; min-width: 0; }
   .ucp-ref {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    background: rgba(0,0,0,0.04);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    white-space: nowrap;
+    font-size: 0.72rem; color: var(--text-muted); font-weight: 500;
+    background: rgba(255,255,255,0.06); padding: 0.15rem 0.45rem; border-radius: 4px; white-space: nowrap;
   }
 
-  .discrepancy-detail {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
+  .disc-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .detail-box { background: rgba(255,255,255,0.04); border-radius: 6px; padding: 0.6rem 0.8rem; }
+  .detail-label { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 0.2rem; }
+  .detail-value { font-size: 0.85rem; color: var(--white); line-height: 1.5; }
 
-  .detail-box {
-    background: rgba(0,0,0,0.02);
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-  }
+  .disc-explanation { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; padding-top: 0.6rem; border-top: 1px solid var(--border-subtle); }
+  .disc-action { font-size: 0.82rem; color: var(--teal-light); margin-top: 0.5rem; font-weight: 500; }
+  .disc-doc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; font-style: italic; }
 
-  .detail-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-bottom: 0.3rem;
+  /* Cross-LC observations */
+  .observations-list { list-style: none; }
+  .observations-list li {
+    font-size: 0.88rem; color: var(--text-body); padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);
+    display: flex; align-items: flex-start; gap: 0.5rem;
   }
-
-  .detail-value {
-    font-size: 0.88rem;
-    color: var(--white);
-    line-height: 1.5;
-  }
-
-  .discrepancy-explanation {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border-subtle);
-  }
-
-  .discrepancy-doc {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-    font-style: italic;
-  }
-
-  .confidence-badge {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-    white-space: nowrap;
-  }
-
-  .confidence-badge.high {
-    background: rgba(22,163,74,0.1);
-    color: var(--green);
-  }
-
-  .confidence-badge.medium {
-    background: rgba(234,88,12,0.1);
-    color: var(--orange);
-  }
-
-  .confidence-badge.low {
-    background: rgba(220,38,38,0.1);
-    color: var(--red);
-  }
-
-  /* Verification summary */
-  .verify-summary {
-    background: rgba(13,148,136,0.06);
-    border: 1px solid rgba(13,148,136,0.2);
-    border-radius: 8px;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 2rem;
-    font-size: 0.88rem;
-    color: var(--teal);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  /* OCR progress */
-  .ocr-progress {
-    background: rgba(180,83,9,0.06);
-    border: 1px solid rgba(180,83,9,0.2);
-    border-radius: 8px;
-    padding: 0.75rem 1.25rem;
-    margin-top: 1rem;
-    font-size: 0.88rem;
-    color: var(--gold);
-    font-weight: 500;
-    display: none;
-  }
-
-  .ocr-progress.show {
-    display: block;
-  }
+  .observations-list li:last-child { border-bottom: none; }
+  .obs-bullet { color: var(--gold); flex-shrink: 0; margin-top: 0.15rem; }
 
   /* Recommended actions */
-  .actions-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .actions-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .action-item { display: flex; gap: 0.75rem; align-items: flex-start; }
+  .action-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--teal); color: #fff;
+    font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .action-text { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.15rem; }
+  .action-rationale { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* Phase error note */
+  .phase-error {
+    background: var(--red-light); border: 1px solid rgba(220,38,38,0.3); border-radius: 8px;
+    padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #F87171;
   }
 
-  .action-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .action-number {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--teal);
-    color: #FFFFFF;
-    font-size: 0.85rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .action-content {
-    flex: 1;
-  }
-
-  .action-text {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 0.25rem;
-  }
-
-  .action-rationale {
-    font-size: 0.84rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  /* No discrepancies state */
-  .no-discrepancies {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-muted);
-    font-size: 0.92rem;
-  }
-
-  /* Reset button */
+  /* Reset */
   .reset-btn {
-    display: block;
-    margin: 2rem auto 0;
-    padding: 0.8rem 2rem;
-    background: transparent;
-    color: var(--teal);
-    border: 1px solid var(--teal);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
+    display: block; margin: 2rem auto 0; padding: 0.8rem 2rem;
+    background: transparent; color: var(--teal); border: 1px solid var(--teal); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.25s;
   }
-  .reset-btn:hover {
-    background: var(--teal-glow);
-    transform: translateY(-1px);
-  }
+  .reset-btn:hover { background: var(--teal-glow); transform: translateY(-1px); }
 
   /* ========== EMAIL CAPTURE ========== */
-  .email-section {
-    text-align: center;
-    padding: 4rem 2rem;
-  }
-
+  .email-section { text-align: center; padding: 4rem 2rem; display: none; }
   .email-wrapper {
-    max-width: 520px;
-    margin: 0 auto;
-    background: rgba(255,255,255,0.7);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 2.5rem;
+    max-width: 520px; margin: 0 auto; background: var(--navy); border: 1px solid var(--border-subtle);
+    border-radius: 12px; padding: 2.5rem;
   }
-
-  .email-wrapper h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-  }
-
-  .email-wrapper p {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .email-form {
-    display: flex;
-    gap: 0.5rem;
-  }
-
+  .email-wrapper h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .email-wrapper p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  .email-form { display: flex; gap: 0.5rem; }
   .email-form input {
-    flex: 1;
-    padding: 0.85rem 1.2rem;
-    background: var(--navy);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.3s;
+    flex: 1; padding: 0.85rem 1.2rem; background: var(--navy-dark); border: 1px solid var(--border-subtle);
+    border-radius: 8px; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.3s;
   }
   .email-form input::placeholder { color: var(--text-muted); }
   .email-form input:focus { border-color: var(--teal); }
-
   .email-form button {
-    padding: 0.85rem 1.5rem;
-    background: var(--teal);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
-    white-space: nowrap;
+    padding: 0.85rem 1.5rem; background: var(--teal); color: #fff; border: none; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.25s; white-space: nowrap;
   }
-  .email-form button:hover {
-    background: var(--teal-light);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(13,148,136,0.3);
-  }
-
-  .form-success {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    color: var(--teal-light);
-    font-weight: 500;
-    font-size: 0.95rem;
-    margin-top: 1rem;
-  }
+  .email-form button:hover { background: var(--teal-light); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(13,148,136,0.3); }
+  .form-success { display: none; align-items: center; justify-content: center; gap: 0.5rem; color: var(--teal-light); font-weight: 500; font-size: 0.95rem; margin-top: 1rem; }
   .form-success.show { display: flex; }
-  .form-success svg { flex-shrink: 0; }
-
-  /* ========== ERROR STATE ========== */
-  .error-message {
-    display: none;
-    background: rgba(220,38,38,0.06);
-    border: 1px solid rgba(220,38,38,0.2);
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
-    margin-top: 1rem;
-    color: var(--red);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    text-align: center;
-  }
-
-  .error-message.show {
-    display: block;
-  }
 
   /* ========== FOOTER ========== */
-  footer {
-    border-top: 1px solid var(--border-subtle);
-    padding: 4rem 2rem 2.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .footer-brand .footer-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    color: var(--white);
-    margin-bottom: 0.75rem;
-  }
+  footer { border-top: 1px solid var(--border-subtle); padding: 4rem 2rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--white); margin-bottom: 0.75rem; }
   .footer-brand .footer-logo span { color: var(--teal); }
-
-  .footer-tagline {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 280px;
-  }
-
-  .footer-col-title {
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--white);
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-
-  .footer-col a {
-    display: block;
-    font-size: 0.84rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 0.3rem 0;
-    transition: color 0.2s;
-  }
+  .footer-tagline { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; max-width: 280px; }
+  .footer-col-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); font-weight: 600; margin-bottom: 1rem; }
+  .footer-col a { display: block; font-size: 0.84rem; color: var(--text-muted); text-decoration: none; padding: 0.3rem 0; transition: color 0.2s; }
   .footer-col a:hover { color: var(--teal-light); }
-
-  .footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-subtle);
-  }
-
-  .footer-text {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .footer-bottom-links {
-    display: flex;
-    gap: 1.5rem;
-  }
-  .footer-bottom-links a {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border-subtle); }
+  .footer-text { font-size: 0.78rem; color: var(--text-muted); }
+  .footer-bottom-links { display: flex; gap: 1.5rem; }
+  .footer-bottom-links a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
   .footer-bottom-links a:hover { color: var(--teal-light); }
 
   /* ========== ANIMATIONS ========== */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  /* ========== SCROLL REVEAL ========== */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 768px) {
     .nav-links { display: none; }
-    .hero { padding: 7rem 1.5rem 3rem; min-height: auto; }
+    .hero { padding: 7rem 1.5rem 2.5rem; min-height: auto; }
     .hero-features { gap: 1rem; }
-    .upload-wrapper { padding: 0; }
     .drop-zone { padding: 2rem 1.5rem; }
-    .discrepancy-detail { grid-template-columns: 1fr; }
-    .verdict-banner { flex-direction: column; text-align: center; }
+    .disc-detail { grid-template-columns: 1fr; }
+    .tx-grid { grid-template-columns: 1fr 1fr; }
     .email-form { flex-direction: column; }
-    .email-form input { width: 100%; }
-    .email-form button { width: 100%; }
+    .email-form input, .email-form button { width: 100%; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
     .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
-    .checklist-table { font-size: 0.82rem; }
-    .checklist-table th, .checklist-table td { padding: 0.5rem 0.5rem; }
+    .checklist-table th, .checklist-table td { padding: 0.4rem 0.5rem; font-size: 0.8rem; }
+    .lc-card-header { flex-wrap: wrap; }
   }
-
   @media (max-width: 480px) {
     .footer-grid { grid-template-columns: 1fr; }
-    .verdict-counts { flex-wrap: wrap; justify-content: center; }
+    .tx-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -1134,20 +425,20 @@
     </div>
     <div class="hero-feature">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      Cross-document consistency
+      Multi-LC support
     </div>
     <div class="hero-feature">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      Instant results
+      PDF, Email &amp; Word
     </div>
   </div>
 </section>
 
-<!-- UPLOAD SECTION -->
-<section class="upload-section" id="upload">
-  <div class="upload-wrapper reveal">
+<!-- UPLOAD -->
+<section class="upload-section" id="uploadSection">
+  <div class="upload-wrapper">
     <div class="drop-zone" id="dropZone">
-      <input type="file" id="fileInput" multiple accept=".pdf">
+      <input type="file" id="fileInput" multiple accept=".pdf,.eml,.docx">
       <div class="drop-zone-icon">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
@@ -1155,109 +446,63 @@
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
       </div>
-      <div class="drop-zone-text">Drop your PDFs here or click to browse</div>
+      <div class="drop-zone-text">Drop your files here or click to browse</div>
       <div class="drop-zone-hint">Upload your L/C and trade documents (Commercial Invoice, Bill of Lading, Packing List, etc.)</div>
+      <div class="drop-zone-formats">Accepted: PDF, Email (.eml), Word (.docx)</div>
     </div>
-
     <div class="file-list" id="fileList"></div>
-
     <button class="analyze-btn" id="analyzeBtn" disabled>Analyze Documents</button>
-
-    <div class="error-message" id="errorMessage"></div>
-    <div class="ocr-progress" id="ocrProgress"></div>
+    <div class="status-message" id="statusMessage"></div>
   </div>
 </section>
 
-<!-- LOADING SECTION -->
+<!-- LOADING -->
 <section class="loading-section" id="loadingSection">
   <div class="spinner"></div>
   <div class="loading-steps">
     <div class="loading-step" id="step1">
-      <div class="loading-step-icon">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      Classifying documents...
+      <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div><div>Classifying documents...</div><div class="loading-step-detail" id="step1Detail"></div></div>
     </div>
     <div class="loading-step" id="step2">
-      <div class="loading-step-icon">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      Parsing L/C requirements...
+      <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div><div>Parsing L/C requirements...</div><div class="loading-step-detail" id="step2Detail"></div></div>
     </div>
     <div class="loading-step" id="step3">
-      <div class="loading-step-icon">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      Checking UCP 600 compliance...
+      <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div><div>Checking UCP 600 compliance...</div><div class="loading-step-detail" id="step3Detail"></div></div>
     </div>
     <div class="loading-step" id="step4">
-      <div class="loading-step-icon">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      Verifying findings...
+      <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div><div>Verifying findings...</div><div class="loading-step-detail" id="step4Detail"></div></div>
     </div>
   </div>
 </section>
 
-<!-- RESULTS SECTION -->
+<!-- RESULTS -->
 <section class="results-section" id="resultsSection">
   <div class="results-wrapper">
-
-    <!-- Verification Summary -->
+    <div id="phaseErrors"></div>
     <div class="verify-summary" id="verifySummary" style="display:none;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       <span id="verifySummaryText"></span>
     </div>
-
-    <!-- Verdict Banner -->
-    <div class="verdict-banner" id="verdictBanner">
-      <div class="verdict-icon" id="verdictIcon"></div>
-      <div class="verdict-text">
-        <h3 id="verdictTitle"></h3>
-        <div class="verdict-summary" id="verdictSummary"></div>
-        <div class="verdict-counts" id="verdictCounts"></div>
-      </div>
-    </div>
-
-    <!-- Document Checklist -->
-    <div class="results-block" id="checklistBlock">
-      <div class="results-block-title">Document Checklist</div>
-      <table class="checklist-table">
-        <thead>
-          <tr>
-            <th>Document</th>
-            <th>Status</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody id="checklistBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Discrepancies -->
-    <div class="results-block" id="discrepancyBlock">
-      <div class="results-block-title">Discrepancy Report</div>
-      <div class="discrepancy-list" id="discrepancyList"></div>
-    </div>
-
-    <!-- Recommended Actions -->
-    <div class="results-block" id="actionsBlock">
-      <div class="results-block-title">Recommended Actions</div>
-      <div class="actions-list" id="actionsList"></div>
-    </div>
-
+    <div id="txOverview"></div>
+    <div id="lcCards"></div>
+    <div id="crossObservations"></div>
+    <div id="recActions"></div>
     <button class="reset-btn" id="resetBtn">Analyze New Documents</button>
   </div>
 </section>
 
 <!-- EMAIL CAPTURE -->
-<section class="email-section" id="emailSection" style="display:none;">
-  <div class="email-wrapper reveal">
-    <h3>Want the full FlowX experience?</h3>
-    <p>Get early access to automated L/C management, real-time monitoring, and AI-powered trade operations.</p>
+<section class="email-section" id="emailSection">
+  <div class="email-wrapper">
+    <h3>Get a copy of this report</h3>
+    <p>Enter your email and we'll send you a detailed PDF report, plus early access to FlowX when we launch.</p>
     <div class="email-form" id="emailForm">
       <input type="email" id="captureEmail" placeholder="Your work email">
-      <button onclick="handleEmailCapture()">Get Early Access</button>
+      <button onclick="handleEmailCapture()">Send Report</button>
     </div>
     <div class="form-success" id="emailSuccess">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -1301,70 +546,23 @@
   </div>
 </footer>
 
-<!-- PDF.js from CDN -->
+<!-- CDN Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<!-- Tesseract.js for OCR on scanned PDFs -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
 <script>
-  // Set pdf.js worker
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
   // ========== STATE ==========
   let uploadedFiles = [];
 
-  // ========== XSS SANITIZER ==========
+  // ========== HELPERS ==========
   function sanitize(str) {
     if (str == null) return '';
     const div = document.createElement('div');
     div.textContent = String(str);
     return div.innerHTML;
-  }
-
-  // ========== FILE MANAGEMENT ==========
-  const dropZone = document.getElementById('dropZone');
-  const fileInput = document.getElementById('fileInput');
-  const fileList = document.getElementById('fileList');
-  const analyzeBtn = document.getElementById('analyzeBtn');
-  const errorMessage = document.getElementById('errorMessage');
-
-  // Drag and drop
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-  });
-
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-  });
-
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
-    addFiles(files);
-  });
-
-  // Click to upload
-  fileInput.addEventListener('change', (e) => {
-    const files = Array.from(e.target.files);
-    addFiles(files);
-    fileInput.value = '';
-  });
-
-  function addFiles(files) {
-    files.forEach(file => {
-      if (file.type !== 'application/pdf') return;
-      if (uploadedFiles.some(f => f.name === file.name && f.size === file.size)) return;
-      uploadedFiles.push(file);
-    });
-    renderFileList();
-    hideError();
-  }
-
-  function removeFile(index) {
-    uploadedFiles.splice(index, 1);
-    renderFileList();
   }
 
   function formatFileSize(bytes) {
@@ -1373,374 +571,429 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
+  function getFileExt(name) {
+    return (name || '').split('.').pop().toLowerCase();
+  }
+
+  const ACCEPTED_EXTS = new Set(['pdf', 'eml', 'docx']);
+
+  // ========== FILE MANAGEMENT ==========
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const statusMsg = document.getElementById('statusMessage');
+
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropZone.classList.remove('dragover');
+    addFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', (e) => { addFiles(Array.from(e.target.files)); fileInput.value = ''; });
+
+  function addFiles(files) {
+    files.forEach(file => {
+      if (!ACCEPTED_EXTS.has(getFileExt(file.name))) return;
+      if (uploadedFiles.some(f => f.name === file.name && f.size === file.size)) return;
+      uploadedFiles.push(file);
+    });
+    renderFileList();
+    hideStatus();
+  }
+
+  function removeFile(index) { uploadedFiles.splice(index, 1); renderFileList(); }
+
   function renderFileList() {
     fileList.innerHTML = uploadedFiles.map((file, i) => `
       <div class="file-item">
         <div class="file-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
           </svg>
         </div>
         <div class="file-info">
           <div class="file-name">${sanitize(file.name)}</div>
-          <div class="file-size">${formatFileSize(file.size)}</div>
+          <div class="file-size">${formatFileSize(file.size)} &middot; ${getFileExt(file.name).toUpperCase()}</div>
         </div>
-        <button class="file-remove" onclick="removeFile(${i})" title="Remove file">
+        <button class="file-remove" onclick="removeFile(${i})" title="Remove">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
     `).join('');
-
     analyzeBtn.disabled = uploadedFiles.length === 0;
   }
 
-  // ========== PDF TEXT EXTRACTION ==========
-  const OCR_MIN_TEXT_LENGTH = 100;
+  function showStatus(msg, type) { statusMsg.textContent = msg; statusMsg.className = 'status-message ' + type; }
+  function hideStatus() { statusMsg.className = 'status-message'; statusMsg.textContent = ''; }
+
+  // ========== FILE TEXT EXTRACTION ==========
+  const OCR_MIN_CHARS = 100;
   const OCR_MAX_PAGES = 3;
 
-  async function extractTextFromPdf(file) {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let fullText = '';
+  async function extractText(file) {
+    const ext = getFileExt(file.name);
+    if (ext === 'pdf') return extractPdf(file);
+    if (ext === 'eml') return extractEml(file);
+    if (ext === 'docx') return extractDocx(file);
+    return '';
+  }
 
+  async function extractPdf(file) {
+    const ab = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+    let text = '';
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const content = await page.getTextContent();
-      const pageText = content.items.map(item => item.str).join(' ');
-      fullText += pageText + '\n';
+      text += content.items.map(item => item.str).join(' ') + '\n';
     }
-
-    const trimmed = fullText.trim();
-
-    // If very little text extracted, try OCR on scanned pages
-    if (trimmed.length < OCR_MIN_TEXT_LENGTH) {
-      const ocrText = await ocrFallback(pdf, file.name);
+    const trimmed = text.trim();
+    if (trimmed.length < OCR_MIN_CHARS) {
+      const ocrText = await ocrPdf(pdf, file.name);
       if (ocrText && ocrText.trim().length > 0) {
         return '[OCR-extracted text — may contain recognition errors]\n' + ocrText.trim();
       }
     }
-
     return trimmed;
   }
 
-  async function ocrFallback(pdf, fileName) {
-    const ocrProgress = document.getElementById('ocrProgress');
-    ocrProgress.classList.add('show');
-    let fullText = '';
-    const pagesToOcr = Math.min(pdf.numPages, OCR_MAX_PAGES);
-
+  async function ocrPdf(pdf, fileName) {
+    showStatus(`Running OCR on scanned document: ${fileName}...`, 'ocr');
+    let text = '';
+    const pages = Math.min(pdf.numPages, OCR_MAX_PAGES);
     try {
-      for (let i = 1; i <= pagesToOcr; i++) {
-        ocrProgress.textContent = `Running OCR on scanned document: ${sanitize(fileName)}... page ${i}/${pagesToOcr} (this may take 30-60 seconds per page)`;
+      for (let i = 1; i <= pages; i++) {
+        showStatus(`Running OCR on ${fileName}... page ${i}/${pages} (this may take 30-60 seconds per page)`, 'ocr');
         const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 });
+        const vp = page.getViewport({ scale: 2.0 });
         const canvas = document.createElement('canvas');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext('2d');
-        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-        const { data: { text } } = await Tesseract.recognize(canvas, 'eng');
-        fullText += text + '\n';
+        canvas.width = vp.width; canvas.height = vp.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        const { data: { text: t } } = await Tesseract.recognize(canvas, 'eng');
+        text += t + '\n';
         canvas.remove();
       }
-    } finally {
-      ocrProgress.classList.remove('show');
-    }
-
-    return fullText.trim();
+    } finally { hideStatus(); }
+    return text.trim();
   }
 
-  // ========== ERROR HANDLING ==========
-  function showError(msg) {
-    errorMessage.textContent = msg;
-    errorMessage.classList.add('show');
+  async function extractEml(file) {
+    return await file.text();
   }
 
-  function hideError() {
-    errorMessage.classList.remove('show');
+  async function extractDocx(file) {
+    const ab = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer: ab });
+    return result.value || '';
   }
 
-  // ========== LOADING PROGRESS ==========
+  // ========== LOADING ==========
   const TOTAL_STEPS = 4;
-
   function showLoading() {
     document.getElementById('loadingSection').classList.add('active');
-    document.querySelector('.upload-section').style.display = 'none';
+    document.getElementById('uploadSection').style.display = 'none';
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      document.getElementById('step' + i).classList.remove('active', 'done');
+      document.getElementById('step' + i + 'Detail').textContent = '';
+    }
+    setStep(1);
+  }
+  function setStep(step) {
     for (let i = 1; i <= TOTAL_STEPS; i++) {
       const el = document.getElementById('step' + i);
-      el.classList.remove('active', 'done');
-    }
-    setLoadingStep(1);
-  }
-
-  function setLoadingStep(step) {
-    for (let i = 1; i <= TOTAL_STEPS; i++) {
-      const el = document.getElementById('step' + i);
-      if (i < step) {
-        el.classList.remove('active');
-        el.classList.add('done');
-      } else if (i === step) {
-        el.classList.add('active');
-        el.classList.remove('done');
-      } else {
-        el.classList.remove('active', 'done');
-      }
+      if (i < step) { el.classList.remove('active'); el.classList.add('done'); }
+      else if (i === step) { el.classList.add('active'); el.classList.remove('done'); }
+      else { el.classList.remove('active', 'done'); }
     }
   }
+  function setStepDetail(step, text) { document.getElementById('step' + step + 'Detail').textContent = text; }
+  function hideLoading() { document.getElementById('loadingSection').classList.remove('active'); }
 
-  function hideLoading() {
-    document.getElementById('loadingSection').classList.remove('active');
+  // ========== API HELPER ==========
+  async function callApi(endpoint, body) {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || `${endpoint} failed`);
+    }
+    return resp.json();
   }
 
-  // ========== ANALYSIS ==========
+  // ========== MAIN ANALYSIS FLOW ==========
   analyzeBtn.addEventListener('click', async () => {
     if (uploadedFiles.length === 0) return;
-    hideError();
-
+    hideStatus();
     showLoading();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    const phaseErrors = [];
+    let classification = null, parsing = null, checkResult = null, finalResult = null;
+
     try {
-      // Phase 1: Classify documents — extract text from PDFs
-      setLoadingStep(1);
+      // Extract text from all files
+      setStep(1);
       const documents = [];
       for (const file of uploadedFiles) {
         try {
-          const text = await extractTextFromPdf(file);
-          documents.push({
-            name: file.name,
-            text: text,
-            type: 'pdf'
-          });
+          const text = await extractText(file);
+          documents.push({ name: file.name, text: text });
         } catch {
-          documents.push({
-            name: file.name,
-            text: '',
-            type: 'pdf'
-          });
+          documents.push({ name: file.name, text: '' });
         }
       }
 
-      // Check if we got any text
       const hasText = documents.some(d => d.text.trim().length > 0);
       if (!hasText) {
         hideLoading();
-        document.querySelector('.upload-section').style.display = '';
-        showError('Could not extract text from the uploaded PDFs. The documents may be image-only scans that OCR could not read. Please try uploading text-based (digital) PDFs.');
+        document.getElementById('uploadSection').style.display = '';
+        showStatus('Could not extract text from any uploaded files. Please try text-based (digital) PDFs or email files.', 'error');
         return;
       }
 
-      // Phase 2: Parse L/C requirements
-      setLoadingStep(2);
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ documents })
-      });
-
-      // Phase 3: Check UCP 600 compliance
-      setLoadingStep(3);
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error || 'Analysis failed. Please try again.');
+      // Phase 1: Classify
+      try {
+        classification = await callApi('/api/classify', { documents });
+        const docCount = (classification.documents || []).length;
+        const lcCount = (classification.lc_groups || []).length;
+        setStepDetail(1, `Found ${docCount} document${docCount !== 1 ? 's' : ''} across ${lcCount} Letter${lcCount !== 1 ? 's' : ''} of Credit`);
+      } catch (err) {
+        phaseErrors.push('Phase 1 (Classification): ' + err.message);
       }
 
-      const analysisResult = await response.json();
-
-      // Phase 4: Verify findings
-      setLoadingStep(4);
-      let finalResult = analysisResult;
-      let removedCount = 0;
-
-      try {
-        const verifyResponse = await fetch('/api/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ analysis: analysisResult })
-        });
-
-        if (verifyResponse.ok) {
-          const verifiedResult = await verifyResponse.json();
-          const originalCount = (analysisResult.discrepancies || []).length;
-          const verifiedCount = (verifiedResult.discrepancies || []).length;
-          removedCount = originalCount - verifiedCount;
-          finalResult = verifiedResult;
-          finalResult._verified = true;
-          finalResult._confirmedCount = verifiedCount;
-          finalResult._removedCount = Math.max(0, removedCount);
+      // Phase 2: Parse
+      setStep(2);
+      if (classification) {
+        try {
+          parsing = await callApi('/api/parse', { classification, documents });
+          const lcCount = (classification.lc_groups || []).length;
+          setStepDetail(2, `Extracted requirements from ${lcCount} L/C${lcCount !== 1 ? 's' : ''}`);
+        } catch (err) {
+          phaseErrors.push('Phase 2 (Parsing): ' + err.message);
         }
-      } catch {
-        // Verification failed — use unverified results
-        console.warn('Verification phase failed, using unverified results');
+      }
+
+      // Phase 3: Check
+      setStep(3);
+      if (classification && parsing) {
+        try {
+          checkResult = await callApi('/api/check', { classification, parsing, documents });
+          const analyses = checkResult.analysis_per_lc || [];
+          const totalDisc = analyses.reduce((sum, a) => sum + (a.discrepancies || []).length, 0);
+          setStepDetail(3, totalDisc > 0 ? `${totalDisc} potential finding${totalDisc !== 1 ? 's' : ''} identified` : 'No discrepancies found');
+        } catch (err) {
+          phaseErrors.push('Phase 3 (Compliance Check): ' + err.message);
+        }
+      }
+
+      // Phase 4: Verify
+      setStep(4);
+      finalResult = checkResult;
+      let verifyMeta = null;
+      if (checkResult) {
+        try {
+          const verified = await callApi('/api/verify', { analysis: checkResult });
+          const origCount = (checkResult.analysis_per_lc || []).reduce((s, a) => s + (a.discrepancies || []).length, 0);
+          const newCount = (verified.analysis_per_lc || []).reduce((s, a) => s + (a.discrepancies || []).length, 0);
+          const removed = Math.max(0, origCount - newCount);
+          verifyMeta = { confirmed: newCount, removed };
+          setStepDetail(4, `Verified: ${newCount} finding${newCount !== 1 ? 's' : ''} confirmed, ${removed} false positive${removed !== 1 ? 's' : ''} removed`);
+          finalResult = verified;
+        } catch (err) {
+          phaseErrors.push('Phase 4 (Verification): ' + err.message);
+        }
       }
 
       await new Promise(r => setTimeout(r, 300));
-
       hideLoading();
-      renderResults(finalResult);
+
+      if (!classification && !checkResult) {
+        document.getElementById('uploadSection').style.display = '';
+        showStatus('Analysis failed. ' + phaseErrors.join(' '), 'error');
+        return;
+      }
+
+      renderResults(finalResult, classification, verifyMeta, phaseErrors);
 
     } catch (err) {
       hideLoading();
-      document.querySelector('.upload-section').style.display = '';
-      showError(err.message || 'An error occurred during analysis. Please try again.');
+      document.getElementById('uploadSection').style.display = '';
+      showStatus(err.message || 'An error occurred. Please try again.', 'error');
     }
   });
 
   // ========== RENDER RESULTS ==========
-  function renderResults(data) {
-    const resultsSection = document.getElementById('resultsSection');
-    const emailSection = document.getElementById('emailSection');
+  function renderResults(checkData, classData, verifyMeta, errors) {
+    const section = document.getElementById('resultsSection');
 
-    // Verification summary
-    const verifySummary = document.getElementById('verifySummary');
-    const verifySummaryText = document.getElementById('verifySummaryText');
-    if (data._verified) {
-      verifySummary.style.display = '';
-      verifySummaryText.textContent = `Verified: ${data._confirmedCount} finding${data._confirmedCount !== 1 ? 's' : ''} confirmed, ${data._removedCount} removed as false positive${data._removedCount !== 1 ? 's' : ''}`;
+    // Phase errors
+    const errDiv = document.getElementById('phaseErrors');
+    errDiv.innerHTML = errors.map(e => `<div class="phase-error">${sanitize(e)}</div>`).join('');
+
+    // Verify summary
+    const vs = document.getElementById('verifySummary');
+    if (verifyMeta) {
+      vs.style.display = '';
+      document.getElementById('verifySummaryText').textContent =
+        `Verified: ${verifyMeta.confirmed} finding${verifyMeta.confirmed !== 1 ? 's' : ''} confirmed, ${verifyMeta.removed} removed as false positive${verifyMeta.removed !== 1 ? 's' : ''}`;
     } else {
-      verifySummary.style.display = 'none';
+      vs.style.display = 'none';
     }
 
-    // Verdict
-    const verdictBanner = document.getElementById('verdictBanner');
-    const verdictIcon = document.getElementById('verdictIcon');
-    const verdictTitle = document.getElementById('verdictTitle');
-    const verdictSummary = document.getElementById('verdictSummary');
-    const verdictCounts = document.getElementById('verdictCounts');
+    // Transaction overview
+    const txDiv = document.getElementById('txOverview');
+    if (classData) {
+      const docs = classData.documents || [];
+      const lcGroups = classData.lc_groups || [];
+      const vessel = docs.find(d => d.vessel_name)?.vessel_name || '—';
+      const beneficiary = docs.find(d => d.beneficiary)?.beneficiary || '—';
+      const applicant = docs.find(d => d.applicant)?.applicant || '—';
+      const readable = docs.filter(d => d.text_quality === 'full_text').length;
+      const scanned = docs.filter(d => d.text_quality !== 'full_text').length;
 
-    // Determine verdict class
-    let verdictClass = 'compliant';
-    let verdictLabel = 'Compliant';
-    let iconSvg = '';
-
-    if (data.verdict === 'MAJOR_ISSUES') {
-      verdictClass = 'major';
-      verdictLabel = 'Major Issues Found';
-      iconSvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
-    } else if (data.verdict === 'DISCREPANCIES_FOUND') {
-      verdictClass = 'discrepancies';
-      verdictLabel = 'Discrepancies Found';
-      iconSvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+      txDiv.innerHTML = `
+        <div class="tx-overview">
+          <div class="tx-overview-title">Transaction Overview</div>
+          <div class="tx-grid">
+            <div><div class="tx-item-label">Vessel</div><div class="tx-item-value">${sanitize(vessel)}</div></div>
+            <div><div class="tx-item-label">Seller / Beneficiary</div><div class="tx-item-value">${sanitize(beneficiary)}</div></div>
+            <div><div class="tx-item-label">Buyer / Applicant</div><div class="tx-item-value">${sanitize(applicant)}</div></div>
+            <div><div class="tx-item-label">Letters of Credit</div><div class="tx-item-value">${lcGroups.length}</div></div>
+            <div><div class="tx-item-label">Documents Uploaded</div><div class="tx-item-value">${docs.length} (${readable} readable${scanned > 0 ? ', ' + scanned + ' scanned' : ''})</div></div>
+          </div>
+        </div>`;
     } else {
-      iconSvg = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+      txDiv.innerHTML = '';
     }
 
-    verdictBanner.className = 'verdict-banner ' + verdictClass;
-    verdictIcon.innerHTML = iconSvg;
-    verdictTitle.textContent = verdictLabel;
-    verdictSummary.textContent = sanitize(data.summary || '');
+    // Per-LC cards
+    const lcDiv = document.getElementById('lcCards');
+    const analyses = (checkData && checkData.analysis_per_lc) || [];
 
-    // Count severities
-    const discrepancies = data.discrepancies || [];
-    const criticalCount = discrepancies.filter(d => d.severity === 'critical').length;
-    const majorCount = discrepancies.filter(d => d.severity === 'major').length;
-    const minorCount = discrepancies.filter(d => d.severity === 'minor').length;
+    if (analyses.length > 0) {
+      lcDiv.innerHTML = analyses.map((lc, idx) => {
+        const verdictClass = lc.verdict === 'compliant' ? 'compliant' : lc.verdict === 'discrepant' ? 'discrepant' : lc.verdict === 'incomplete' ? 'incomplete' : 'issues';
+        const verdictLabel = lc.verdict === 'compliant' ? 'Compliant' : lc.verdict === 'discrepant' ? 'Discrepancies' : lc.verdict === 'incomplete' ? 'Incomplete' : 'Issues Found';
 
-    let countsHtml = '';
-    if (criticalCount > 0) countsHtml += `<span class="verdict-count critical">${criticalCount} Critical</span>`;
-    if (majorCount > 0) countsHtml += `<span class="verdict-count major-count">${majorCount} Major</span>`;
-    if (minorCount > 0) countsHtml += `<span class="verdict-count minor">${minorCount} Minor</span>`;
-    verdictCounts.innerHTML = countsHtml;
+        // Checklist
+        const checklist = (lc.document_checklist || []).map(doc => {
+          const statusClass = doc.status === 'presented' ? 'status-presented' : doc.status === 'missing' ? 'status-missing' : 'status-unverifiable';
+          const statusIcon = doc.status === 'presented'
+            ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+            : doc.status === 'missing'
+            ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+            : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+          return `<tr>
+            <td>${sanitize(doc.document_name)}</td>
+            <td><span class="${statusClass}">${statusIcon} ${sanitize(doc.status)}</span></td>
+            <td>${sanitize(doc.matched_file || '')}</td>
+            <td class="checklist-notes">${sanitize(doc.notes || '')}</td>
+          </tr>`;
+        }).join('');
 
-    // Document Checklist
-    const checklistBody = document.getElementById('checklistBody');
-    const checklist = data.documentChecklist || [];
-    if (checklist.length > 0) {
-      document.getElementById('checklistBlock').style.display = '';
-      checklistBody.innerHTML = checklist.map(doc => `
-        <tr>
-          <td>${sanitize(doc.document)}</td>
-          <td>
-            <span class="checklist-status ${doc.presented ? 'presented' : 'missing'}">
-              ${doc.presented
-                ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Presented'
-                : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Missing'}
-            </span>
-          </td>
-          <td class="checklist-notes">${sanitize(doc.notes || '')}</td>
-        </tr>
-      `).join('');
-    } else {
-      document.getElementById('checklistBlock').style.display = 'none';
-    }
+        // Discrepancies
+        const discs = (lc.discrepancies || []).map(d => {
+          let confHtml = '';
+          if (d.confidence_score != null) {
+            const s = Number(d.confidence_score);
+            const cls = s >= 0.9 ? 'high' : s >= 0.7 ? 'medium' : 'high';
+            const lbl = s >= 0.9 ? 'HIGH' : s >= 0.7 ? 'MEDIUM' : 'HIGH';
+            confHtml = `<span class="conf-badge ${cls}">${lbl} ${Math.round(s * 100)}%</span>`;
+          }
+          return `
+          <div class="disc-card ${sanitize(d.severity)}">
+            <div class="disc-header">
+              <span class="sev-badge ${sanitize(d.severity)}">${sanitize(d.severity)}</span>
+              <span class="disc-title">${sanitize(d.title)}</span>
+              ${confHtml}
+              ${d.ucp_article ? `<span class="ucp-ref">${sanitize(d.ucp_article)}</span>` : ''}
+            </div>
+            <div class="disc-detail">
+              <div class="detail-box"><div class="detail-label">L/C Requirement</div><div class="detail-value">${sanitize(d.lc_requirement)}</div></div>
+              <div class="detail-box"><div class="detail-label">Actual Value</div><div class="detail-value">${sanitize(d.actual_value)}</div></div>
+            </div>
+            <div class="disc-explanation">${sanitize(d.explanation)}</div>
+            ${d.recommended_action ? `<div class="disc-action">Action: ${sanitize(d.recommended_action)}</div>` : ''}
+            ${d.affected_document ? `<div class="disc-doc">Affected: ${sanitize(d.affected_document)}</div>` : ''}
+          </div>`;
+        }).join('');
 
-    // Discrepancies
-    const discrepancyList = document.getElementById('discrepancyList');
-    if (discrepancies.length > 0) {
-      document.getElementById('discrepancyBlock').style.display = '';
-      discrepancyList.innerHTML = discrepancies.map(d => {
-        let confidenceHtml = '';
-        if (d.confidence_score != null) {
-          const score = Number(d.confidence_score);
-          let confClass = 'high';
-          let confLabel = 'HIGH';
-          if (score < 0.7) { confClass = 'low'; confLabel = 'LOW'; }
-          else if (score < 0.9) { confClass = 'medium'; confLabel = 'MEDIUM'; }
-          confidenceHtml = `<span class="confidence-badge ${confClass}">${confLabel} ${Math.round(score * 100)}%</span>`;
-        }
+        // LC meta line
+        const meta = [lc.issuing_bank].filter(Boolean).join(' · ');
+
         return `
-        <div class="discrepancy-card ${sanitize(d.severity)}">
-          <div class="discrepancy-header">
-            <span class="severity-badge ${sanitize(d.severity)}">${sanitize(d.severity)}</span>
-            <span class="discrepancy-title">${sanitize(d.title)}</span>
-            ${confidenceHtml}
-            ${d.ucpArticle ? `<span class="ucp-ref">${sanitize(d.ucpArticle)}</span>` : ''}
-          </div>
-          <div class="discrepancy-detail">
-            <div class="detail-box">
-              <div class="detail-label">L/C Requirement</div>
-              <div class="detail-value">${sanitize(d.lcRequirement)}</div>
+        <div class="lc-card ${idx === 0 ? 'open' : ''}" onclick="toggleLc(this, event)">
+          <div class="lc-card-header">
+            <svg class="lc-card-toggle" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="lc-card-info">
+              <div class="lc-card-ref">${sanitize(lc.lc_reference || 'L/C ' + (idx + 1))}</div>
+              ${meta ? `<div class="lc-card-meta">${sanitize(meta)}</div>` : ''}
             </div>
-            <div class="detail-box">
-              <div class="detail-label">Actual Value</div>
-              <div class="detail-value">${sanitize(d.actualValue)}</div>
-            </div>
+            <span class="verdict-badge ${verdictClass}">${verdictLabel}</span>
           </div>
-          <div class="discrepancy-explanation">${sanitize(d.explanation)}</div>
-          ${d.affectedDocument ? `<div class="discrepancy-doc">Affected document: ${sanitize(d.affectedDocument)}</div>` : ''}
+          <div class="lc-card-body">
+            <div class="lc-card-summary">${sanitize(lc.summary || '')}</div>
+            ${checklist ? `
+              <div class="block-title">Document Checklist</div>
+              <table class="checklist-table">
+                <thead><tr><th>Document</th><th>Status</th><th>Matched File</th><th>Notes</th></tr></thead>
+                <tbody>${checklist}</tbody>
+              </table>` : ''}
+            ${discs ? `<div class="block-title">Discrepancies</div><div class="discrepancy-list">${discs}</div>` : ''}
+            ${!discs && lc.verdict === 'compliant' ? '<div style="padding:1rem 0;color:var(--green);font-weight:500;">No discrepancies found. All documents appear to be in order.</div>' : ''}
+          </div>
         </div>`;
       }).join('');
     } else {
-      document.getElementById('discrepancyBlock').style.display = '';
-      discrepancyList.innerHTML = '<div class="no-discrepancies">No discrepancies found. All documents appear to be in order.</div>';
+      lcDiv.innerHTML = '';
     }
 
-    // Recommended Actions
-    const actionsList = document.getElementById('actionsList');
-    const actions = data.recommendedActions || [];
-    if (actions.length > 0) {
-      document.getElementById('actionsBlock').style.display = '';
-      actionsList.innerHTML = actions.map((a, i) => `
-        <div class="action-item">
-          <div class="action-number">${i + 1}</div>
-          <div class="action-content">
-            <div class="action-text">${sanitize(a.action)}</div>
-            <div class="action-rationale">${sanitize(a.rationale)}</div>
-          </div>
-        </div>
-      `).join('');
+    // Cross-LC observations
+    const obsDiv = document.getElementById('crossObservations');
+    const observations = (checkData && checkData.cross_lc_observations) || [];
+    if (observations.length > 0) {
+      obsDiv.innerHTML = `
+        <div class="block-title" style="margin-top:2rem;">Cross-LC Observations</div>
+        <ul class="observations-list">
+          ${observations.map(o => `<li><svg class="obs-bullet" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/></svg>${sanitize(o)}</li>`).join('')}
+        </ul>`;
     } else {
-      document.getElementById('actionsBlock').style.display = 'none';
+      obsDiv.innerHTML = '';
     }
 
-    resultsSection.classList.add('active');
-    emailSection.style.display = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Recommended actions
+    const actDiv = document.getElementById('recActions');
+    const actions = (checkData && checkData.recommended_actions) || [];
+    if (actions.length > 0) {
+      actDiv.innerHTML = `
+        <div class="block-title" style="margin-top:2rem;">Recommended Actions</div>
+        <div class="actions-list">
+          ${actions.map((a, i) => `
+            <div class="action-item">
+              <div class="action-num">${i + 1}</div>
+              <div><div class="action-text">${sanitize(a.action)}</div><div class="action-rationale">${sanitize(a.rationale)}</div></div>
+            </div>`).join('')}
+        </div>`;
+    } else {
+      actDiv.innerHTML = '';
+    }
 
-    // Trigger reveal on email section
-    setTimeout(() => {
-      const revealEls = emailSection.querySelectorAll('.reveal');
-      revealEls.forEach(el => el.classList.add('visible'));
-    }, 300);
+    section.classList.add('active');
+    document.getElementById('emailSection').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ========== LC CARD TOGGLE ==========
+  function toggleLc(card, event) {
+    // Don't toggle if clicking inside the body
+    if (event.target.closest('.lc-card-body')) return;
+    card.classList.toggle('open');
   }
 
   // ========== RESET ==========
@@ -1749,8 +1002,8 @@
     renderFileList();
     document.getElementById('resultsSection').classList.remove('active');
     document.getElementById('emailSection').style.display = 'none';
-    document.querySelector('.upload-section').style.display = '';
-    hideError();
+    document.getElementById('uploadSection').style.display = '';
+    hideStatus();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
@@ -1758,8 +1011,8 @@
   function handleEmailCapture() {
     const email = document.getElementById('captureEmail').value.trim();
     if (!email || !email.includes('@') || !email.includes('.')) {
-      document.getElementById('captureEmail').style.borderColor = '#E05252';
-      setTimeout(() => document.getElementById('captureEmail').style.borderColor = 'rgba(0,0,0,0.1)', 2000);
+      document.getElementById('captureEmail').style.borderColor = '#F87171';
+      setTimeout(() => document.getElementById('captureEmail').style.borderColor = '', 2000);
       return;
     }
     document.getElementById('emailForm').style.display = 'none';
@@ -1767,27 +1020,11 @@
     console.log('L/C Checker signup:', email);
   }
 
-  // ========== SCROLL REVEAL ==========
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-  reveals.forEach(el => observer.observe(el));
-
   // ========== NAV SCROLL ==========
   window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
-    if (window.scrollY > 50) {
-      nav.style.padding = '0.8rem 2rem';
-    } else {
-      nav.style.padding = '1.25rem 2rem';
-    }
+    nav.style.padding = window.scrollY > 50 ? '0.8rem 2rem' : '1.25rem 2rem';
   });
 </script>
-
 </body>
 </html>
