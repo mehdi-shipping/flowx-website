@@ -46,23 +46,12 @@ export default async function handler(req, res) {
 
     const userMessage = `Phase 1 classification:\n${JSON.stringify(classification, null, 2)}\n\nPhase 2 parsing:\n${JSON.stringify(parsing, null, 2)}\n\nDocument texts:\n${docTexts}`;
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 55000);
-
-    let message;
-    try {
-      message = await client.messages.create(
-        {
-          model: "claude-opus-4-6",
-          max_tokens: 8192,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: userMessage }],
-        },
-        { signal: controller.signal }
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
+    const message = await client.messages.create({
+      model: "claude-opus-4-6",
+      max_tokens: 8192,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: userMessage }],
+    });
 
     const responseText = message.content[0].type === "text" ? message.content[0].text : "";
     console.log("Check raw:", responseText.slice(0, 300));
@@ -71,7 +60,6 @@ export default async function handler(req, res) {
     return res.status(200).json(result);
   } catch (err) {
     console.error("Check error:", err);
-    if (err.name === "AbortError") return res.status(504).json({ error: "Compliance check timed out." });
     if (err.status === 401) return res.status(500).json({ error: "API configuration error." });
     if (err.status === 429) return res.status(429).json({ error: "Too many requests. Please wait." });
     return res.status(500).json({ error: "Compliance check failed. Please try again." });

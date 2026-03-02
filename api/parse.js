@@ -36,42 +36,36 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing classification or documents." });
     }
 
-    // LC documents get full text, others get up to 6000 chars
+    // Build document text map from classification
     const lcTypes = new Set(["lc_swift_mt700", "lc_amendment_mt799"]);
-    const lcFilenames = new Set(
-      (classification.documents || [])
-        .filter(d => lcTypes.has(d.document_type))
-        .map(d => d.filename)
+    const classifiedDocs = new Map(
+      (classification.documents || []).map(d => [d.filename, d])
     );
 
     const docTexts = documents.map((doc, i) => {
-      const isLc = lcFilenames.has(doc.name);
+      const cls = classifiedDocs.get(doc.name);
+      const isLc = cls && lcTypes.has(cls.document_type);
+      const isNoText = cls && cls.text_quality === "no_text";
+
+      if (isNoText) {
+        return `--- DOCUMENT ${i + 1}: ${doc.name || "unnamed"} ---\n[No text — classified as ${cls.document_type}]`;
+      }
+
       let text = doc.text && doc.text.trim() ? doc.text.trim() : "[No text extracted]";
-      if (!isLc && text.length > 6000) {
-        text = text.slice(0, 6000) + "\n[...truncated]";
+      if (!isLc && text.length > 4000) {
+        text = text.slice(0, 4000) + "\n[...truncated]";
       }
       return `--- DOCUMENT ${i + 1}: ${doc.name || "unnamed"} ---\n${text}`;
     }).join("\n\n");
 
     const userMessage = `Phase 1 classification:\n${JSON.stringify(classification, null, 2)}\n\nFull document texts:\n${docTexts}`;
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 55000);
-
-    let message;
-    try {
-      message = await client.messages.create(
-        {
-          model: "claude-sonnet-4-5-20250929",
-          max_tokens: 8192,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: userMessage }],
-        },
-        { signal: controller.signal }
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
+    const message = await client.messages.create({
+      model: "claude-sonnet-4-5-20250929",
+      max_tokens: 8192,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: userMessage }],
+    });
 
     const responseText = message.content[0].type === "text" ? message.content[0].text : "";
     console.log("Parse raw:", responseText.slice(0, 300));
@@ -80,7 +74,6 @@ export default async function handler(req, res) {
     return res.status(200).json(result);
   } catch (err) {
     console.error("Parse error:", err);
-    if (err.name === "AbortError") return res.status(504).json({ error: "Parsing timed out." });
     if (err.status === 401) return res.status(500).json({ error: "API configuration error." });
     if (err.status === 429) return res.status(429).json({ error: "Too many requests. Please wait." });
     return res.status(500).json({ error: "Parsing failed. Please try again." });
