@@ -4,7 +4,7 @@ export const config = { maxDuration: 60 };
 
 const client = new Anthropic();
 
-const SYSTEM_PROMPT = `You are an expert LC document examiner. You receive Phase 1 classification and full document texts. For each LC, extract: A) Basic terms: lc_number, issuing_bank, advising_bank, applicant, beneficiary, amount, currency, tolerance_percent, issue_date, expiry_date, latest_shipment_date, presentation_period, draft_terms. B) Shipping terms: port_of_loading, port_of_discharge, partial_shipments, transshipment, goods_description (exact from 45A), incoterms, quantity_mt. C) Required documents from 46A: each with document_name, originals_required, copies_required, specific_requirements. D) Additional conditions from 47A. E) Document matching: for each required doc, which uploaded file matches (by LC ref, invoice number, quantity, bank name), confidence, notes. Mark unmatched as not_presented. Preserve EXACT LC requirement wording. Respond ONLY valid JSON no markdown fences.`;
+const SYSTEM_PROMPT = `You are an expert LC document examiner. You receive a single LC and its associated trade documents. Extract: A) Basic terms: lc_number, issuing_bank, advising_bank, applicant, beneficiary, amount, currency, tolerance_percent, issue_date, expiry_date, latest_shipment_date, presentation_period, draft_terms. B) Shipping terms: port_of_loading, port_of_discharge, partial_shipments, transshipment, goods_description (exact from 45A), incoterms, quantity_mt. C) Required documents from 46A: each with document_name, originals_required, copies_required, specific_requirements. D) Additional conditions from 47A. E) Document matching: for each required doc, which uploaded file matches (by LC ref, invoice number, quantity, bank name), confidence, notes. Mark unmatched as not_presented. Preserve EXACT LC requirement wording. Respond ONLY valid JSON no markdown fences: {"lc_number": "", "issuing_bank": "", "advising_bank": "", "applicant": "", "beneficiary": "", "amount": "", "currency": "", "tolerance_percent": "", "issue_date": "", "expiry_date": "", "latest_shipment_date": "", "presentation_period": "", "draft_terms": "", "port_of_loading": "", "port_of_discharge": "", "partial_shipments": "", "transshipment": "", "goods_description": "", "incoterms": "", "quantity_mt": "", "required_documents": [{"document_name": "", "originals_required": 0, "copies_required": 0, "specific_requirements": "", "matched_file": null, "confidence": 0, "notes": ""}], "additional_conditions": [""], "unmatched_files": [""]}`;
 
 function parseJSON(text) {
   let cleaned = text
@@ -36,42 +36,85 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Missing classification or documents." });
     }
 
-    // Build document text map from classification
     const lcTypes = new Set(["lc_swift_mt700", "lc_amendment_mt799"]);
+    const lcGroups = classification.lc_groups || [];
     const classifiedDocs = new Map(
       (classification.documents || []).map(d => [d.filename, d])
     );
+    const docTextMap = new Map(
+      documents.map(d => [d.name, d.text || ""])
+    );
 
-    const docTexts = documents.map((doc, i) => {
-      const cls = classifiedDocs.get(doc.name);
-      const isLc = cls && lcTypes.has(cls.document_type);
-      const isNoText = cls && cls.text_quality === "no_text";
+    // Find filenames not assigned to any LC group
+    const assignedFiles = new Set(lcGroups.flatMap(g => g.documents_belonging || []));
+    const unmatchedFiles = documents
+      .filter(d => !assignedFiles.has(d.name))
+      .map(d => d.name);
 
-      if (isNoText) {
-        return `--- DOCUMENT ${i + 1}: ${doc.name || "unnamed"} ---\n[No text — classified as ${cls.document_type}]`;
+    // Process each LC group separately
+    const lcResults = [];
+
+    for (const group of lcGroups) {
+      const belongingFiles = group.documents_belonging || [];
+
+      // Build doc texts for this LC group
+      const docTexts = [];
+
+      for (const filename of belongingFiles) {
+        const cls = classifiedDocs.get(filename);
+        const isLc = cls && lcTypes.has(cls.document_type);
+        const isNoText = cls && cls.text_quality === "no_text";
+
+        if (isNoText) {
+          docTexts.push(`--- ${filename} ---\n[No text — classified as ${cls.document_type}]`);
+          continue;
+        }
+
+        let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
+        if (!isLc && text.length > 4000) {
+          text = text.slice(0, 4000) + "\n[...truncated]";
+        }
+        docTexts.push(`--- ${filename} ---\n${text}`);
       }
 
-      let text = doc.text && doc.text.trim() ? doc.text.trim() : "[No text extracted]";
-      if (!isLc && text.length > 4000) {
-        text = text.slice(0, 4000) + "\n[...truncated]";
+      // Add unmatched docs so the model can try to match them
+      for (const filename of unmatchedFiles) {
+        const cls = classifiedDocs.get(filename);
+        const isNoText = cls && cls.text_quality === "no_text";
+
+        if (isNoText) {
+          docTexts.push(`--- ${filename} [UNMATCHED] ---\n[No text — classified as ${cls ? cls.document_type : "unknown"}]`);
+          continue;
+        }
+
+        let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
+        if (text.length > 4000) {
+          text = text.slice(0, 4000) + "\n[...truncated]";
+        }
+        docTexts.push(`--- ${filename} [UNMATCHED] ---\n${text}`);
       }
-      return `--- DOCUMENT ${i + 1}: ${doc.name || "unnamed"} ---\n${text}`;
-    }).join("\n\n");
 
-    const userMessage = `Phase 1 classification:\n${JSON.stringify(classification, null, 2)}\n\nFull document texts:\n${docTexts}`;
+      const userMessage = `LC Reference: ${group.lc_reference || "unknown"}\nIssuing Bank: ${group.issuing_bank || "unknown"}\n\nDocuments:\n${docTexts.join("\n\n")}`;
 
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-5-20250929",
-      max_tokens: 8192,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMessage }],
-    });
+      console.log(`Parse LC ${group.lc_reference}: ${docTexts.length} docs, ~${userMessage.length} chars`);
 
-    const responseText = message.content[0].type === "text" ? message.content[0].text : "";
-    console.log("Parse raw:", responseText.slice(0, 300));
+      const message = await client.messages.create({
+        model: "claude-sonnet-4-5-20250929",
+        max_tokens: 8192,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userMessage }],
+      });
 
-    const result = parseJSON(responseText);
-    return res.status(200).json(result);
+      const responseText = message.content[0].type === "text" ? message.content[0].text : "";
+      console.log(`Parse LC ${group.lc_reference} raw:`, responseText.slice(0, 200));
+
+      const parsed = parseJSON(responseText);
+      parsed._lc_reference = group.lc_reference;
+      parsed._issuing_bank = group.issuing_bank;
+      lcResults.push(parsed);
+    }
+
+    return res.status(200).json({ lc_analyses: lcResults });
   } catch (err) {
     console.error("Parse error:", err);
     if (err.status === 401) return res.status(500).json({ error: "API configuration error." });
