@@ -15,6 +15,8 @@ Check for:
 
 If only an L/C is provided, analyze it for internal issues and list documents that will be needed. If no L/C is found, analyze available docs for common issues and note that no L/C was identified.
 
+Keep responses concise. For discrepancies, limit to the 10 most critical findings. For recommended actions, limit to 5.
+
 Respond with ONLY raw JSON. No markdown, no code fences, no backticks, no explanation before or after.
 {"verdict":"COMPLIANT"|"DISCREPANCIES_FOUND"|"MAJOR_ISSUES","summary":"One sentence","documentChecklist":[{"document":"Name","required":true,"presented":true|false,"notes":""}],"discrepancies":[{"id":1,"severity":"critical"|"major"|"minor","title":"Short title","ucpArticle":"UCP 600 Art. XX"|null,"lcRequirement":"What L/C requires","actualValue":"What doc states","explanation":"Why and consequences","affectedDocument":"Doc name"}],"recommendedActions":[{"priority":1,"action":"What to do","rationale":"Why"}]}`;
 
@@ -76,7 +78,7 @@ export default async function handler(req, res) {
       message = await client.messages.create(
         {
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 4096,
+          max_tokens: 8192,
           system: SYSTEM_PROMPT,
           messages: [{ role: "user", content: userMessage }],
         },
@@ -95,9 +97,11 @@ export default async function handler(req, res) {
     let analysis;
     try {
       // Strip markdown code fences if present
-      let cleaned = responseText.trim();
-      cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/,  "");
-      cleaned = cleaned.trim();
+      let cleaned = responseText
+        .replace(/^```json\s*/i, "")
+        .replace(/^```\s*/i, "")
+        .replace(/```\s*$/g, "")
+        .trim();
 
       // Try direct parse first, then fall back to regex extraction
       try {
