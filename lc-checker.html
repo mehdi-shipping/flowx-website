@@ -452,6 +452,7 @@
     </div>
     <div class="file-list" id="fileList"></div>
     <button class="analyze-btn" id="analyzeBtn" disabled>Analyze Documents</button>
+    <div style="font-size:0.78rem; color:var(--text-muted); margin-top:1rem; text-align:center; line-height:1.5;">Note: Scanned/image PDFs cannot be read yet. For best results, upload text-based PDFs and email (.eml) files.</div>
     <div class="status-message" id="statusMessage"></div>
   </div>
 </section>
@@ -548,7 +549,7 @@
 
 <!-- CDN Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<!-- Tesseract.js OCR disabled for now — will re-enable as optional step -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
 <script>
@@ -630,8 +631,7 @@
   function hideStatus() { statusMsg.className = 'status-message'; statusMsg.textContent = ''; }
 
   // ========== FILE TEXT EXTRACTION ==========
-  const OCR_MIN_CHARS = 100;
-  const OCR_MAX_PAGES = 3;
+  const MIN_TEXT_CHARS = 100;
 
   async function extractText(file) {
     const ext = getFileExt(file.name);
@@ -651,33 +651,9 @@
       text += content.items.map(item => item.str).join(' ') + '\n';
     }
     const trimmed = text.trim();
-    if (trimmed.length < OCR_MIN_CHARS) {
-      const ocrText = await ocrPdf(pdf, file.name);
-      if (ocrText && ocrText.trim().length > 0) {
-        return '[OCR-extracted text — may contain recognition errors]\n' + ocrText.trim();
-      }
-    }
+    // If very little text, mark as unreadable (likely scanned/image PDF)
+    if (trimmed.length < MIN_TEXT_CHARS) return '';
     return trimmed;
-  }
-
-  async function ocrPdf(pdf, fileName) {
-    showStatus(`Running OCR on scanned document: ${fileName}...`, 'ocr');
-    let text = '';
-    const pages = Math.min(pdf.numPages, OCR_MAX_PAGES);
-    try {
-      for (let i = 1; i <= pages; i++) {
-        showStatus(`Running OCR on ${fileName}... page ${i}/${pages} (this may take 30-60 seconds per page)`, 'ocr');
-        const page = await pdf.getPage(i);
-        const vp = page.getViewport({ scale: 2.0 });
-        const canvas = document.createElement('canvas');
-        canvas.width = vp.width; canvas.height = vp.height;
-        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-        const { data: { text: t } } = await Tesseract.recognize(canvas, 'eng');
-        text += t + '\n';
-        canvas.remove();
-      }
-    } finally { hideStatus(); }
-    return text.trim();
   }
 
   async function extractEml(file) {
