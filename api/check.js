@@ -30,23 +30,16 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { classification, parsing, documents } = req.body;
+    const { classification, parsing } = req.body;
 
-    if (!classification || !parsing || !documents) {
+    if (!classification || !parsing) {
       return res.status(400).json({ error: "Missing required phase data." });
     }
 
-    const lcTypes = new Set(["lc_swift_mt700", "lc_amendment_mt799"]);
-    const classifiedDocs = new Map(
-      (classification.documents || []).map(d => [d.filename, d])
-    );
-    const docTextMap = new Map(
-      documents.map(d => [d.name, d.text || ""])
-    );
     const lcGroups = classification.lc_groups || [];
     const lcParsed = parsing.lc_analyses || [];
 
-    // Process each LC separately
+    // Process each LC separately — using structured data only (no raw documents)
     const allAnalyses = [];
     const allObservations = [];
     const allActions = [];
@@ -57,30 +50,17 @@ export default async function handler(req, res) {
         p._lc_reference === group.lc_reference || p.lc_number === group.lc_reference
       ) || {};
 
-      const belongingFiles = group.documents_belonging || [];
+      // Build per-LC classification subset
+      const belongingFiles = new Set(group.documents_belonging || []);
+      const lcClassification = {
+        lc_reference: group.lc_reference,
+        issuing_bank: group.issuing_bank,
+        documents: (classification.documents || []).filter(d => belongingFiles.has(d.filename)),
+      };
 
-      // Build doc texts for this LC
-      const docTexts = [];
-      for (const filename of belongingFiles) {
-        const cls = classifiedDocs.get(filename);
-        const isLc = cls && lcTypes.has(cls.document_type);
-        const isNoText = cls && cls.text_quality === "no_text";
+      const userMessage = `Here is the classification:\n${JSON.stringify(lcClassification, null, 2)}\n\nHere is the parsed LC requirements and document matching:\n${JSON.stringify(parsedLc, null, 2)}\n\nPerform UCP 600 compliance check.`;
 
-        if (isNoText) {
-          docTexts.push(`--- ${filename} ---\n[No text — classified as ${cls.document_type}]`);
-          continue;
-        }
-
-        let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
-        if (!isLc && text.length > 2000) {
-          text = text.slice(0, 2000) + "\n[...truncated]";
-        }
-        docTexts.push(`--- ${filename} ---\n${text}`);
-      }
-
-      const userMessage = `LC parsed requirements:\n${JSON.stringify(parsedLc, null, 2)}\n\nDocument texts:\n${docTexts.join("\n\n")}`;
-
-      console.log(`Check LC ${group.lc_reference}: ${docTexts.length} docs, ~${userMessage.length} chars`);
+      console.log(`Check LC ${group.lc_reference}: ~${userMessage.length} chars`);
 
       const message = await client.messages.create({
         model: "claude-sonnet-4-5-20250929",
