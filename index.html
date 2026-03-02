@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowX — Turning Trade Complexity into Clarity</title>
+<meta name="description" content="FlowX is the AI platform that turns commodity trade complexity into clarity. Automatically capture, structure, and monitor every element of a trade.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-dark: #F5F1EB;
+    --navy: #FFFFFF;
+    --navy-mid: #EDE8E0;
+    --teal: #0D9488;
+    --teal-light: #0F766E;
+    --teal-glow: rgba(13,148,136,0.06);
+    --gold: #B45309;
+    --gold-light: rgba(180,83,9,0.06);
+    --light-bg: #F0EDE8;
+    --white: #1C1917;
+    --text-muted: #78716C;
+    --text-body: #44403C;
+    --border-subtle: rgba(0,0,0,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy-dark);
+    color: var(--text-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== GRAIN OVERLAY ========== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ========== NAV ========== */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(245,241,235,0.92);
+    border-bottom: 1px solid var(--border-subtle);
+    transition: all 0.3s ease;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .logo span { color: var(--teal); }
+
+  .nav-cta {
+    background: var(--teal);
+    color: #FFFFFF;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+  }
+  .nav-cta:hover {
+    background: var(--teal-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(13,148,136,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    opacity: 0.3;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--gold-light);
+    border: 1px solid rgba(180,83,9,0.2);
+    color: var(--gold);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.45rem 1.1rem;
+    border-radius: 100px;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.8s ease forwards;
+    opacity: 0;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 6vw, 4.8rem);
+    color: var(--white);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    max-width: 800px;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.8s 0.15s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-muted);
+    max-width: 580px;
+    line-height: 1.65;
+    margin-bottom: 3rem;
+    animation: fadeDown 0.8s 0.3s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-form {
+    display: flex;
+    gap: 0.5rem;
+    animation: fadeDown 0.8s 0.45s ease forwards;
+    opacity: 0;
+    position: relative;
+  }
+
+  .hero-form input {
+    width: 320px;
+    padding: 0.9rem 1.2rem;
+    background: var(--navy);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .hero-form input::placeholder { color: var(--text-muted); }
+  .hero-form input:focus { border-color: var(--teal); }
+
+  .hero-form button {
+    padding: 0.9rem 2rem;
+    background: var(--teal);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .hero-form button:hover {
+    background: var(--teal-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(13,148,136,0.3);
+  }
+
+  .hero-note {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    animation: fadeDown 0.8s 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  /* ========== STATS BAR ========== */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(0,0,0,0.02);
+  }
+
+  .stat-item {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-right: 1px solid var(--border-subtle);
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: rgba(13,148,136,0.04); }
+
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--teal-light);
+    margin-bottom: 0.4rem;
+  }
+  .stat-number.gold { color: var(--gold); }
+  .stat-number.red { color: #E05252; }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  /* ========== SECTIONS ========== */
+  section {
+    padding: 6rem 2rem;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-desc {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ========== PROBLEM SECTION ========== */
+  .problem-section {
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 100%);
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .problem-card:hover {
+    border-color: rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+  .problem-card:nth-child(1)::before { background: #E05252; }
+  .problem-card:nth-child(2)::before { background: var(--gold); }
+  .problem-card:nth-child(3)::before { background: #E05252; }
+  .problem-card:nth-child(4)::before { background: var(--gold); }
+  .problem-card:nth-child(5)::before { background: var(--teal); }
+  .problem-card:nth-child(6)::before { background: var(--gold); }
+
+  .problem-stat {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .problem-card:nth-child(odd) .problem-stat { color: #E05252; }
+  .problem-card:nth-child(even) .problem-stat { color: var(--gold); }
+  .problem-card:nth-child(5) .problem-stat { color: var(--teal); }
+
+  .problem-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .problem-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .problem-content { flex: 1; min-width: 0; }
+  .problem-icon { flex-shrink: 0; width: 72px; height: 72px; align-self: center; }
+  .problem-icon svg { width: 100%; height: 100%; }
+
+  /* ========== HOW IT WORKS ========== */
+  .how-section {
+    background: var(--navy-dark);
+    position: relative;
+  }
+
+  .steps {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    right: 28px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    opacity: 0.3;
+  }
+
+  .step {
+    flex: 1;
+    text-align: center;
+    padding: 0 1rem;
+    position: relative;
+  }
+
+  .step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 2px solid var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    position: relative;
+    z-index: 2;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+  }
+  .step:hover .step-icon {
+    background: var(--teal);
+    box-shadow: 0 0 30px rgba(13,148,136,0.3);
+  }
+
+  .step-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--teal-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* ========== WHO WE SERVE ========== */
+  .serve-section {
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-dark) 100%);
+  }
+
+  .serve-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .serve-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+  }
+  .serve-card:hover {
+    border-color: var(--teal);
+    background: rgba(13,148,136,0.04);
+  }
+
+  .serve-emoji {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .serve-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+
+  .serve-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ========== CTA SECTION ========== */
+  .cta-section {
+    background: var(--navy-dark);
+    text-align: center;
+    padding: 8rem 2rem;
+    position: relative;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(13,148,136,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    margin-bottom: 1rem;
+  }
+
+  .cta-form {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+
+  .cta-form input {
+    width: 320px;
+    padding: 1rem 1.2rem;
+    background: var(--navy);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .cta-form input::placeholder { color: var(--text-muted); }
+  .cta-form input:focus { border-color: var(--teal); }
+
+  .cta-form button {
+    padding: 1rem 2.2rem;
+    background: var(--teal);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .cta-form button:hover {
+    background: var(--teal-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(13,148,136,0.3);
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 2.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--teal); }
+
+  .footer-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .footer-links a {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--teal-light); }
+
+  /* ========== SUCCESS STATE ========== */
+  .form-success {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--teal-light);
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .form-success.show { display: flex; }
+  .form-success svg { flex-shrink: 0; }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 768px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat-item { border-bottom: 1px solid var(--border-subtle); }
+    .problem-grid { grid-template-columns: 1fr; }
+    .problem-icon { width: 56px; height: 56px; }
+    .steps { flex-direction: column; gap: 2rem; }
+    .steps::before { display: none; }
+    .serve-grid { grid-template-columns: 1fr; }
+    .hero-form, .cta-form { flex-direction: column; align-items: center; }
+    .hero-form input, .cta-form input { width: 100%; max-width: 360px; }
+    .hero-form button, .cta-form button { width: 100%; max-width: 360px; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+
+  /* ========== SCROLL REVEAL ========== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Flow<span>X</span></a>
+  <button class="nav-cta" onclick="document.querySelector('.cta-section').scrollIntoView({behavior:'smooth'})">Get Early Access</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Coming Soon — Early Access Open</div>
+  <h1>The Future of Trade<br>Operations Starts Here</h1>
+  <p class="hero-sub">FlowX automatically captures, structures, and monitors every element of a commodity trade — turning fragmented emails and PDFs into a single, actionable source of truth.</p>
+  <div class="hero-form" id="heroForm">
+    <input type="email" id="heroEmail" placeholder="Your work email" required>
+    <button onclick="handleSignup('heroForm', 'heroEmail', 'heroSuccess')">Request Early Access</button>
+  </div>
+  <div class="form-success" id="heroSuccess">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    You're on the list. We'll be in touch soon.
+  </div>
+  <p class="hero-note">Join the waitlist — no spam, just early access to the future of trade ops.</p>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-number red">70%</div>
+    <div class="stat-label">of L/Cs rejected on first presentation</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number gold">$55M/day</div>
+    <div class="stat-label">lost globally to demurrage &amp; documentation delays</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">500+</div>
+    <div class="stat-label">emails exchanged per single commodity trade</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number gold">50+</div>
+    <div class="stat-label">paper documents per shipment, still the industry standard</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <div class="container">
+    <div class="section-label reveal">The Problem</div>
+    <h2 class="reveal">A $24 trillion industry<br>with no digital infrastructure</h2>
+    <p class="section-desc reveal">Every commodity shipment requires 8–15 parties to coordinate through emails, PDFs, and phone calls. No shared system exists. The consequences are staggering.</p>
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-content">
+          <div class="problem-stat">70%</div>
+          <div class="problem-title">Document Rejections</div>
+          <div class="problem-desc">Letters of Credit rejected on first presentation due to discrepancies. Each rejection costs $2,000–$15,000 in fees and delays.</div>
+        </div>
+        <div class="problem-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 10h28l12 12v40a4 4 0 01-4 4H18a4 4 0 01-4-4V14a4 4 0 014-4z" fill="#FEE2E2" stroke="#E05252" stroke-width="1.5"/>
+            <path d="M46 10v12h12" fill="#FECACA" stroke="#E05252" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M22 32h24M22 40h18M22 48h20" stroke="#E05252" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+            <circle cx="54" cy="54" r="16" fill="#FFF" stroke="#E05252" stroke-width="2"/>
+            <path d="M47 47l14 14M61 47l-14 14" stroke="#E05252" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-content">
+          <div class="problem-stat">$55M/day</div>
+          <div class="problem-title">Demurrage & Delays</div>
+          <div class="problem-desc">Lost globally as vessels wait at ports because documentation isn't ready. $15,000–$80,000 per vessel per day.</div>
+        </div>
+        <div class="problem-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 66c5-3 10-3 15 0s10 3 15 0 10-3 15 0 10 3 15 0 10-3 13 0" stroke="#B45309" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+            <path d="M12 50l5 10h46l5-10H12z" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/>
+            <rect x="24" y="34" width="24" height="16" rx="2" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5"/>
+            <line x1="36" y1="34" x2="36" y2="50" stroke="#B45309" stroke-width="1" opacity="0.3"/>
+            <rect x="50" y="28" width="10" height="22" rx="2" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5"/>
+            <line x1="32" y1="22" x2="32" y2="34" stroke="#B45309" stroke-width="1.5"/>
+            <circle cx="60" cy="18" r="14" fill="#FFF" stroke="#B45309" stroke-width="1.5"/>
+            <path d="M60 10v8l5 3" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-content">
+          <div class="problem-stat">$50B/yr</div>
+          <div class="problem-title">Value Destroyed</div>
+          <div class="problem-desc">Across the value chain from avoidable payment delays caused by document errors and amendment cycles.</div>
+        </div>
+        <div class="problem-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 16L26 24L40 20L54 38L68 58V68H12Z" fill="#FEE2E2" opacity="0.4"/>
+            <path d="M12 16L26 24L40 20L54 38L68 58" stroke="#E05252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="16" r="3" fill="#FFF" stroke="#E05252" stroke-width="1.5"/>
+            <circle cx="26" cy="24" r="3" fill="#FFF" stroke="#E05252" stroke-width="1.5"/>
+            <circle cx="40" cy="20" r="3" fill="#FFF" stroke="#E05252" stroke-width="1.5"/>
+            <circle cx="54" cy="38" r="3" fill="#FFF" stroke="#E05252" stroke-width="1.5"/>
+            <circle cx="68" cy="58" r="3.5" fill="#E05252"/>
+            <path d="M12 10v60h60" stroke="#E05252" stroke-width="1.2" opacity="0.15"/>
+          </svg>
+        </div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-content">
+          <div class="problem-stat">98.8%</div>
+          <div class="problem-title">Still Paper-Based</div>
+          <div class="problem-desc">Of all bills of lading are still paper. The industry hasn't matured far beyond where it was in the 1400s.</div>
+        </div>
+        <div class="problem-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="24" y="6" width="34" height="46" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="1" opacity="0.35" transform="rotate(6 41 29)"/>
+            <rect x="20" y="10" width="34" height="46" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="1.2" opacity="0.55" transform="rotate(-3 37 33)"/>
+            <rect x="16" y="16" width="34" height="46" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5"/>
+            <path d="M24 30h18M24 36h14M24 42h16M24 48h12" stroke="#B45309" stroke-width="1.2" opacity="0.25" stroke-linecap="round"/>
+            <rect x="28" y="2" width="34" height="46" rx="3" fill="none" stroke="#B45309" stroke-width="0.8" opacity="0.2" transform="rotate(12 45 25)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-content">
+          <div class="problem-stat">$2.5T</div>
+          <div class="problem-title">Trade Finance Gap</div>
+          <div class="problem-desc">Firms denied financing partly due to paper-based processes. Digitization could unlock access for millions of businesses worldwide.</div>
+        </div>
+        <div class="problem-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="16" width="44" height="44" rx="4" fill="#E6F7F5" stroke="#0D9488" stroke-width="1.5"/>
+            <circle cx="32" cy="38" r="14" fill="none" stroke="#0D9488" stroke-width="1.5"/>
+            <path d="M24 38h16M32 30v16" stroke="#0D9488" stroke-width="1.2" opacity="0.4"/>
+            <circle cx="32" cy="38" r="4" fill="#0D9488" opacity="0.2"/>
+            <rect x="48" y="44" width="22" height="18" rx="4" fill="#FFF" stroke="#0D9488" stroke-width="2"/>
+            <path d="M54 44v-5a5 5 0 0110 0v5" stroke="#0D9488" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="59" cy="54" r="2" fill="#0D9488"/>
+          </svg>
+        </div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-content">
+          <div class="problem-stat">15%</div>
+          <div class="problem-title">Operational Overhead</div>
+          <div class="problem-desc">Of total transport cost is paper document handling alone. Mid-size traders need 3-5 full-time employees just to manage trade emails.</div>
+        </div>
+        <div class="problem-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="38" width="36" height="26" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5"/>
+            <path d="M10 41l18 12 18-12" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/>
+            <rect x="18" y="26" width="36" height="26" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="1.2" opacity="0.6"/>
+            <path d="M18 29l18 12 18-12" stroke="#B45309" stroke-width="1.2" opacity="0.6" stroke-linejoin="round"/>
+            <rect x="26" y="14" width="36" height="26" rx="3" fill="#FEF3C7" stroke="#B45309" stroke-width="1" opacity="0.35"/>
+            <path d="M26 17l18 12 18-12" stroke="#B45309" stroke-width="1" opacity="0.35" stroke-linejoin="round"/>
+            <circle cx="60" cy="18" r="12" fill="#FFF" stroke="#B45309" stroke-width="1.5"/>
+            <line x1="60" y1="12" x2="60" y2="20" stroke="#B45309" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="60" cy="24" r="1.5" fill="#B45309"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="container">
+    <div class="section-label reveal">How FlowX Works</div>
+    <h2 class="reveal">Five steps from chaos<br>to clarity</h2>
+    <p class="section-desc reveal">FlowX doesn't just digitize paper — it understands your trades. From the moment an email arrives to the final settlement.</p>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-icon">📥</div>
+        <div class="step-name">Map</div>
+        <div class="step-desc">Capture and structure every document, party, deadline, and obligation automatically</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🧠</div>
+        <div class="step-name">Understand</div>
+        <div class="step-desc">Recognize where we are in the deal — what's done, pending, or at risk</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">🔍</div>
+        <div class="step-name">Monitor</div>
+        <div class="step-desc">Real-time alerts on discrepancies, risks, and deadlines with financial exposure</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">💡</div>
+        <div class="step-name">Recommend</div>
+        <div class="step-desc">AI suggests corrective actions, optimal providers, and risk mitigation</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">⚡</div>
+        <div class="step-name">Automate</div>
+        <div class="step-desc">Generate responses, prepare docs, trigger workflows — 80%+ work reduction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section class="serve-section">
+  <div class="container">
+    <div class="section-label reveal">Who We Serve</div>
+    <h2 class="reveal">Every party in every trade<br>is a potential customer</h2>
+    <p class="section-desc reveal">85,500 organizations and ~600,000 users across the global commodity trade ecosystem.</p>
+    <div class="serve-grid">
+      <div class="serve-card reveal">
+        <div class="serve-emoji">🏭</div>
+        <div class="serve-name">Producers</div>
+        <div class="serve-desc">Mining, refining, chemical, and agricultural companies managing export operations</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-emoji">📊</div>
+        <div class="serve-name">Trading Houses</div>
+        <div class="serve-desc">From the top 20 global traders to mid-size and regional commodity merchants</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-emoji">🚢</div>
+        <div class="serve-name">Shipping & Freight</div>
+        <div class="serve-desc">Carriers, freight forwarders, and brokers coordinating vessel logistics</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-emoji">🏦</div>
+        <div class="serve-name">Trade Finance Banks</div>
+        <div class="serve-desc">L/C issuance, advisory, and compliance teams processing documentary credits</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-emoji">🛒</div>
+        <div class="serve-name">Buyers & Importers</div>
+        <div class="serve-desc">Highly fragmented market of importers managing inbound commodity flows</div>
+      </div>
+      <div class="serve-card reveal">
+        <div class="serve-emoji">🔬</div>
+        <div class="serve-name">Surveyors & Inspectors</div>
+        <div class="serve-desc">SGS, Bureau Veritas, Intertek and local inspection companies certifying cargo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container reveal">
+    <div class="section-label">Early Access</div>
+    <h2>The future of trade operations<br>starts here</h2>
+    <p class="section-desc" style="margin: 0 auto 0; max-width: 520px;">Join the waitlist for early access to FlowX. Be among the first to transform how your team manages commodity trades.</p>
+    <div class="cta-form" id="ctaForm">
+      <input type="email" id="ctaEmail" placeholder="Your work email">
+      <button onclick="handleSignup('ctaForm', 'ctaEmail', 'ctaSuccess')">Get Early Access</button>
+    </div>
+    <div class="form-success" id="ctaSuccess" style="justify-content:center; margin-top:1rem;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      You're on the list. We'll be in touch soon.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Flow<span>X</span></div>
+  <div class="footer-text">© 2026 FlowX. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="mailto:founders@flowx.io">Contact</a>
+    <a href="#">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Email signup handler
+  function handleSignup(formId, emailId, successId) {
+    const email = document.getElementById(emailId).value.trim();
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      document.getElementById(emailId).style.borderColor = '#E05252';
+      setTimeout(() => document.getElementById(emailId).style.borderColor = 'rgba(0,0,0,0.1)', 2000);
+      return;
+    }
+    // Hide form, show success
+    document.getElementById(formId).style.display = 'none';
+    document.getElementById(successId).classList.add('show');
+    
+    // In production: send to your email service / API
+    console.log('Signup:', email);
+  }
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) {
+      nav.style.padding = '0.8rem 2rem';
+    } else {
+      nav.style.padding = '1.25rem 2rem';
+    }
+  });
+</script>
+
+</body>
+</html>
