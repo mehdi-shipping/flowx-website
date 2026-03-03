@@ -3,13 +3,7 @@
     "api/classify.js": {
       "maxDuration": 300
     },
-    "api/parse.js": {
-      "maxDuration": 300
-    },
-    "api/check.js": {
-      "maxDuration": 300
-    },
-    "api/verify.js": {
+    "api/analyze-lc.js": {
       "maxDuration": 300
     }
   }

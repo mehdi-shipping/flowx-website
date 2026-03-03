@@ -55,7 +55,6 @@ export default async function handler(req, res) {
     return res.status(200).json(result);
   } catch (err) {
     console.error("Classify error:", err);
-    if (err.name === "AbortError") return res.status(504).json({ error: "Classification timed out." });
     if (err.status === 401) return res.status(500).json({ error: "API configuration error." });
     if (err.status === 429) return res.status(429).json({ error: "Too many requests. Please wait." });
     return res.status(500).json({ error: "Classification failed. Please try again." });

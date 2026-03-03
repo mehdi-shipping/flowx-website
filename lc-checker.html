@@ -467,15 +467,7 @@
     </div>
     <div class="loading-step" id="step2">
       <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <div><div>Parsing L/C requirements...</div><div class="loading-step-detail" id="step2Detail"></div></div>
-    </div>
-    <div class="loading-step" id="step3">
-      <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <div><div>Checking UCP 600 compliance...</div><div class="loading-step-detail" id="step3Detail"></div></div>
-    </div>
-    <div class="loading-step" id="step4">
-      <div class="loading-step-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <div><div>Verifying findings...</div><div class="loading-step-detail" id="step4Detail"></div></div>
+      <div><div>Analyzing compliance...</div><div class="loading-step-detail" id="step2Detail"></div></div>
     </div>
   </div>
 </section>
@@ -667,7 +659,7 @@
   }
 
   // ========== LOADING ==========
-  const TOTAL_STEPS = 4;
+  const TOTAL_STEPS = 2;
   function showLoading() {
     document.getElementById('loadingSection').classList.add('active');
     document.getElementById('uploadSection').style.display = 'none';
@@ -710,7 +702,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const phaseErrors = [];
-    let classification = null, parsing = null, checkResult = null, finalResult = null;
+    let classification = null;
 
     try {
       // Extract text from all files
@@ -743,64 +735,87 @@
         phaseErrors.push('Phase 1 (Classification): ' + err.message);
       }
 
-      // Phase 2: Parse
+      // Phase 2: Analyze each LC
       setStep(2);
+      const lcAnalyses = [];
       if (classification) {
-        try {
-          parsing = await callApi('/api/parse', { classification, documents });
-          console.log('Parse response size:', JSON.stringify(parsing).length);
-          if (!parsing || !parsing.lc_analyses) {
-            console.warn('Parse response missing expected fields:', JSON.stringify(parsing).slice(0, 500));
+        const lcGroups = classification.lc_groups || [];
+        const classifiedDocs = new Map((classification.documents || []).map(d => [d.filename, d]));
+        const assignedFiles = new Set(lcGroups.flatMap(g => g.documents_belonging || []));
+        const unmatchedDocs = documents.filter(d => !assignedFiles.has(d.name));
+
+        for (let i = 0; i < lcGroups.length; i++) {
+          const group = lcGroups[i];
+          const lcRef = group.lc_reference || 'LC ' + (i + 1);
+          const bank = group.issuing_bank || '';
+          setStepDetail(2, `Analyzing ${lcRef}${bank ? ' (' + bank + ')' : ''}...`);
+
+          // Build documents array: only this LC's docs + unmatched docs
+          const lcDocs = (group.documents_belonging || []).map(filename => {
+            const cls = classifiedDocs.get(filename) || {};
+            const doc = documents.find(d => d.name === filename) || { name: filename, text: '' };
+            return {
+              name: doc.name,
+              text: doc.text,
+              document_type: cls.document_type || '',
+              text_quality: cls.text_quality || (doc.text && doc.text.trim().length > 100 ? 'full_text' : 'no_text')
+            };
+          });
+
+          // Add unmatched docs with their classification info
+          const unmatchedWithMeta = unmatchedDocs.map(doc => {
+            const cls = classifiedDocs.get(doc.name) || {};
+            return {
+              name: doc.name,
+              text: doc.text,
+              document_type: cls.document_type || 'unknown',
+              text_quality: cls.text_quality || (doc.text && doc.text.trim().length > 100 ? 'full_text' : 'no_text')
+            };
+          });
+
+          try {
+            const result = await callApi('/api/analyze-lc', {
+              lc_group: group,
+              documents: [...lcDocs, ...unmatchedWithMeta]
+            });
+            console.log('Analyze LC ' + lcRef + ' response size:', JSON.stringify(result).length);
+            lcAnalyses.push(result);
+          } catch (err) {
+            console.error('Analyze LC ' + lcRef + ' error:', err);
+            phaseErrors.push('Analysis of ' + lcRef + ': ' + err.message);
           }
-          const lcCount = (classification.lc_groups || []).length;
-          setStepDetail(2, `Extracted requirements from ${lcCount} L/C${lcCount !== 1 ? 's' : ''}`);
-        } catch (err) {
-          console.error('Phase 2 raw error:', err);
-          phaseErrors.push('Phase 2 (Parsing): ' + err.message);
         }
-      }
 
-      // Phase 3: Check
-      setStep(3);
-      if (classification && parsing) {
-        try {
-          checkResult = await callApi('/api/check', { classification, parsing });
-          const analyses = checkResult.analysis_per_lc || [];
-          const totalDisc = analyses.reduce((sum, a) => sum + (a.discrepancies || []).length, 0);
-          setStepDetail(3, totalDisc > 0 ? `${totalDisc} potential finding${totalDisc !== 1 ? 's' : ''} identified` : 'No discrepancies found');
-        } catch (err) {
-          phaseErrors.push('Phase 3 (Compliance Check): ' + err.message);
-        }
-      }
-
-      // Phase 4: Verify
-      setStep(4);
-      finalResult = checkResult;
-      let verifyMeta = null;
-      if (checkResult) {
-        try {
-          const verified = await callApi('/api/verify', { analysis: checkResult });
-          const origCount = (checkResult.analysis_per_lc || []).reduce((s, a) => s + (a.discrepancies || []).length, 0);
-          const newCount = (verified.analysis_per_lc || []).reduce((s, a) => s + (a.discrepancies || []).length, 0);
-          const removed = Math.max(0, origCount - newCount);
-          verifyMeta = { confirmed: newCount, removed };
-          setStepDetail(4, `Verified: ${newCount} finding${newCount !== 1 ? 's' : ''} confirmed, ${removed} false positive${removed !== 1 ? 's' : ''} removed`);
-          finalResult = verified;
-        } catch (err) {
-          phaseErrors.push('Phase 4 (Verification): ' + err.message);
-        }
+        const totalDisc = lcAnalyses.reduce((sum, a) => sum + (a.discrepancies || []).length, 0);
+        setStepDetail(2, totalDisc > 0
+          ? `${totalDisc} potential finding${totalDisc !== 1 ? 's' : ''} across ${lcAnalyses.length} L/C${lcAnalyses.length !== 1 ? 's' : ''}`
+          : `${lcAnalyses.length} L/C${lcAnalyses.length !== 1 ? 's' : ''} analyzed — no discrepancies found`);
       }
 
       await new Promise(r => setTimeout(r, 300));
       hideLoading();
 
-      if (!classification && !checkResult) {
+      if (!classification && lcAnalyses.length === 0) {
         document.getElementById('uploadSection').style.display = '';
         showStatus('Analysis failed. ' + phaseErrors.join(' '), 'error');
         return;
       }
 
-      renderResults(finalResult, classification, verifyMeta, phaseErrors);
+      const finalResult = { analysis_per_lc: lcAnalyses, recommended_actions: [] };
+      // Collect and deduplicate recommended actions across LCs
+      const seenActions = new Set();
+      for (const lc of lcAnalyses) {
+        for (const a of (lc.recommended_actions || [])) {
+          const key = (a.action || '').toLowerCase().trim();
+          if (key && !seenActions.has(key)) {
+            seenActions.add(key);
+            finalResult.recommended_actions.push(a);
+          }
+        }
+      }
+      finalResult.recommended_actions.sort((a, b) => (a.priority || 99) - (b.priority || 99));
+
+      renderResults(finalResult, classification, null, phaseErrors);
 
     } catch (err) {
       hideLoading();
@@ -817,15 +832,8 @@
     const errDiv = document.getElementById('phaseErrors');
     errDiv.innerHTML = errors.map(e => `<div class="phase-error">${sanitize(e)}</div>`).join('');
 
-    // Verify summary
-    const vs = document.getElementById('verifySummary');
-    if (verifyMeta) {
-      vs.style.display = '';
-      document.getElementById('verifySummaryText').textContent =
-        `Verified: ${verifyMeta.confirmed} finding${verifyMeta.confirmed !== 1 ? 's' : ''} confirmed, ${verifyMeta.removed} removed as false positive${verifyMeta.removed !== 1 ? 's' : ''}`;
-    } else {
-      vs.style.display = 'none';
-    }
+    // Verify summary (not used in 2-phase pipeline)
+    document.getElementById('verifySummary').style.display = 'none';
 
     // Transaction overview
     const txDiv = document.getElementById('txOverview');
