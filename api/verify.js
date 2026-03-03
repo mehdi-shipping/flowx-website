@@ -36,23 +36,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "No analysis data provided." });
     }
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 55000);
-
-    let message;
-    try {
-      message = await client.messages.create(
-        {
-          model: "claude-sonnet-4-5-20250929",
-          max_tokens: 4096,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: `Review and verify this LC examination report:\n\n${JSON.stringify(analysis, null, 2)}` }],
-        },
-        { signal: controller.signal }
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
+    const message = await client.messages.create({
+      model: "claude-sonnet-4-5-20250929",
+      max_tokens: 4096,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: `Review and verify this LC examination report:\n\n${JSON.stringify(analysis, null, 2)}` }],
+    });
 
     const responseText = message.content[0].type === "text" ? message.content[0].text : "";
     console.log("Verify raw:", responseText.slice(0, 300));

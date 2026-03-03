@@ -41,23 +41,12 @@ export default async function handler(req, res) {
       return `--- DOCUMENT ${i + 1}: ${doc.name || "unnamed"} ---\n${text}`;
     }).join("\n\n");
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 55000);
-
-    let message;
-    try {
-      message = await client.messages.create(
-        {
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 4096,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: "user", content: `Classify these trade documents:\n\n${docTexts}` }],
-        },
-        { signal: controller.signal }
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
+    const message = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 4096,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: `Classify these trade documents:\n\n${docTexts}` }],
+    });
 
     const responseText = message.content[0].type === "text" ? message.content[0].text : "";
     console.log("Classify raw:", responseText.slice(0, 300));
