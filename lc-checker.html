@@ -748,9 +748,14 @@
       if (classification) {
         try {
           parsing = await callApi('/api/parse', { classification, documents });
+          console.log('Parse response size:', JSON.stringify(parsing).length);
+          if (!parsing || !parsing.lc_analyses) {
+            console.warn('Parse response missing expected fields:', JSON.stringify(parsing).slice(0, 500));
+          }
           const lcCount = (classification.lc_groups || []).length;
           setStepDetail(2, `Extracted requirements from ${lcCount} L/C${lcCount !== 1 ? 's' : ''}`);
         } catch (err) {
+          console.error('Phase 2 raw error:', err);
           phaseErrors.push('Phase 2 (Parsing): ' + err.message);
         }
       }

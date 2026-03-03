@@ -51,12 +51,6 @@ export default async function handler(req, res) {
       .filter(d => !assignedFiles.has(d.filename) && d.text_quality === "no_text")
       .map(d => d.filename);
 
-    // Safety: if 1 LC group with 8+ docs, use aggressive truncation
-    const aggressiveTruncate = lcGroups.length === 1 &&
-      (lcGroups[0].documents_belonging || []).length > 8;
-    const nonLcLimit = aggressiveTruncate ? 1500 : 2000;
-    const lcLimit = aggressiveTruncate ? 1500 : Infinity;
-
     // Process each LC group separately
     const lcResults = [];
 
@@ -68,26 +62,31 @@ export default async function handler(req, res) {
 
       for (const filename of belongingFiles) {
         const cls = classifiedDocs.get(filename);
-        const isLc = cls && lcTypes.has(cls.document_type);
+        const docType = (cls && cls.document_type) || "";
+        const isLc = /lc|mt700|mt799/i.test(docType);
         const isNoText = cls && cls.text_quality === "no_text";
 
-        // Scanned/unreadable: filename only
+        // Scanned/unreadable: filename only, no text body
         if (isNoText) {
-          docTexts.push(`FILENAME: ${filename} — scanned, no text available`);
+          const stub = `FILENAME: ${filename} — scanned, unreadable`;
+          docTexts.push(stub);
+          console.log("  Doc: " + filename + " = 0 chars (no_text)");
           continue;
         }
 
         let text = (docTextMap.get(filename) || "").trim() || "[No text extracted]";
-        const limit = isLc ? lcLimit : nonLcLimit;
+        const limit = isLc ? 8000 : 2000;
         if (text.length > limit) {
           text = text.slice(0, limit) + "\n[...truncated]";
         }
+        console.log("  Doc: " + filename + " = " + text.length + " chars");
         docTexts.push(`--- ${filename} ---\n${text}`);
       }
 
       // Add unknown/no_text docs as filename-only stubs (no text body)
       for (const filename of unknownNoTextFiles) {
-        docTexts.push(`FILENAME: ${filename} — scanned, no text available`);
+        docTexts.push(`FILENAME: ${filename} — scanned, unreadable`);
+        console.log("  Doc: " + filename + " = 0 chars (unknown/no_text)");
       }
 
       const userMessage = `LC Reference: ${group.lc_reference || "unknown"}\nIssuing Bank: ${group.issuing_bank || "unknown"}\n\nDocuments:\n${docTexts.join("\n\n")}`;
